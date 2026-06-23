@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1fa67b9f681c6742b75af90e465d3ab, type: 3}
+  m_Name: Recipe_Strawberry
+  m_EditorClassIdentifier: 
+  resultName: Strawberry Shake
+  resultSprite: {fileID: 21300000, guid: e8cbc2c622a0b814bbd18a8a6f7deb64, type: 3}
+  requiredIngredients:
+  - {fileID: 11400000, guid: f3211a7122ab8d74a866bf4ce377c65b, type: 2}
+  - {fileID: 11400000, guid: e3b55bbe3954a784b97add91ec1336b8, type: 2}

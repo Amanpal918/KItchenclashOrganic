@@ -2,8 +2,9 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
-  tags: []
+  serializedVersion: 3
+  tags:
+  - KitchenFloor
   layers:
   - Default
   - TransparentFX
@@ -11,7 +12,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - 'Ingredient '
   - 
   - 
   - 
@@ -41,3 +42,27 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 2314970189
+    locked: 0
+  - name: Environment_Static
+    uniqueID: 3347073039
+    locked: 0
+  - name: Containers_Back
+    uniqueID: 3172875637
+    locked: 0
+  - name: Ingredients
+    uniqueID: 696507685
+    locked: 0
+  - name: Containers_Front
+    uniqueID: 1201577529
+    locked: 0
+  - name: Tools
+    uniqueID: 1847440575
+    locked: 0
+  - name: UI_WorldSpace
+    uniqueID: 1038074245
+    locked: 0
+  m_RenderingLayers:
+  - Default
+  m_MigratedRenderPipelines: []

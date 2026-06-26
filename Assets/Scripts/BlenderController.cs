@@ -1,16 +1,15 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
 using System.Collections.Generic;
 
-public class BlenderController : MonoBehaviour, IDropHandler
+[RequireComponent(typeof(Collider2D))] // Needs a 2D Trigger Collider to detect dropped ingredients
+public class BlenderController : MonoBehaviour
 {
     [Header("Data Configuration")]
     public List<RecipeData> allRecipes;
     public TMPro.TextMeshProUGUI uiFeedbackText;
 
     [Header("Blender Visuals")]
-    public Image blenderImage;
+    public SpriteRenderer blenderSpriteRenderer; // Changed from UI Image to SpriteRenderer
 
     [Header("Blender Sprites")]
     public Sprite emptyBlenderSprite;
@@ -24,16 +23,6 @@ public class BlenderController : MonoBehaviour, IDropHandler
     private List<IngredientData> ingredientsInBlender = new List<IngredientData>();
     private RecipeData lastSuccessfulRecipe;
 
-    // IDropHandler - fires when ingredient is dropped on blender
-    public void OnDrop(PointerEventData eventData)
-    {
-        UIDraggableIngredient dragged = eventData.pointerDrag.GetComponent<UIDraggableIngredient>();
-        if (dragged != null)
-        {
-            AddIngredient(dragged.ingredientData);
-        }
-    }
-
     public void AddIngredient(IngredientData data)
     {
         ingredientsInBlender.Add(data);
@@ -45,7 +34,7 @@ public class BlenderController : MonoBehaviour, IDropHandler
     {
         if (ingredientsInBlender.Count == 0)
         {
-            blenderImage.sprite = emptyBlenderSprite;
+            blenderSpriteRenderer.sprite = emptyBlenderSprite;
             return;
         }
 
@@ -54,17 +43,17 @@ public class BlenderController : MonoBehaviour, IDropHandler
             check += item.ingredientName.ToLower() + " ";
 
         if ((check.Contains("chocolate") || check.Contains("choclate")) && check.Contains("milk"))
-            blenderImage.sprite = chocolateAndMilkInJarSprite;
+            blenderSpriteRenderer.sprite = chocolateAndMilkInJarSprite;
         else if (check.Contains("chocolate") || check.Contains("choclate"))
-            blenderImage.sprite = chocolateInJarSprite;
+            blenderSpriteRenderer.sprite = chocolateInJarSprite;
         else if (check.Contains("strawberry"))
-            blenderImage.sprite = strawberryInJarSprite;
+            blenderSpriteRenderer.sprite = strawberryInJarSprite;
         else if (check.Contains("kiwi"))
-            blenderImage.sprite = kiwiInJarSprite;
+            blenderSpriteRenderer.sprite = kiwiInJarSprite;
         else if (check.Contains("pineapple"))
-            blenderImage.sprite = pineappleInJarSprite;
+            blenderSpriteRenderer.sprite = pineappleInJarSprite;
         else if (check.Contains("watermelon"))
-            blenderImage.sprite = watermelonInJarSprite;
+            blenderSpriteRenderer.sprite = watermelonInJarSprite;
     }
 
     public void OnBlendButtonPressed()
@@ -86,7 +75,7 @@ public class BlenderController : MonoBehaviour, IDropHandler
     private void DisplayFinalDrink()
     {
         ingredientsInBlender.Clear();
-        blenderImage.sprite = lastSuccessfulRecipe.resultSprite;
+        blenderSpriteRenderer.sprite = lastSuccessfulRecipe.resultSprite;
     }
 
     private RecipeData ValidateRecipe()
@@ -111,6 +100,6 @@ public class BlenderController : MonoBehaviour, IDropHandler
     public void ClearBlender()
     {
         ingredientsInBlender.Clear();
-        if (blenderImage != null) blenderImage.sprite = emptyBlenderSprite;
+        if (blenderSpriteRenderer != null) blenderSpriteRenderer.sprite = emptyBlenderSprite;
     }
 }

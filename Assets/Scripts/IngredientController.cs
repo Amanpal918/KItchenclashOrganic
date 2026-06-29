@@ -10,12 +10,16 @@ public class IngredientController : MonoBehaviour
     [SerializeField] private float floorTopY = -1.64f;
     [SerializeField] private float floorBottomY = -8.69f;
 
+    [Header("Perspective Scale Settings")]
+    [SerializeField] private float minScaleMultiplier = 0.4f; // Size at the very back (wall)
+    [SerializeField] private float maxScaleMultiplier = 1.0f; // Size at the very front (screen edge)
+    private Vector3 baseLocalScale;
+
     [Header("Juicy Drop Settings")]
     [SerializeField] private float gravity = 25f;
     [SerializeField] private float baseBounceForce = 5f;
     [SerializeField] private float bounciness = 0.5f;
 
-    // State Tracking
     private bool isDragging = false;
     private bool justStartedDrag = false;
     private bool isFallingToFloor = false;
@@ -23,7 +27,6 @@ public class IngredientController : MonoBehaviour
     private int bounceCount = 0;
     private const int MAX_BOUNCES = 2;
 
-    // Component References
     private Vector2 customVelocity;
     private Vector3 dragOffset;
     private Collider2D myCollider;
@@ -38,7 +41,9 @@ public class IngredientController : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
 
-        // Keep Rigidbody fully manual
+        // Record the starting scale set in the Unity Editor
+        baseLocalScale = transform.localScale;
+
         if (rb != null)
         {
             rb.bodyType = RigidbodyType2D.Kinematic;
@@ -75,6 +80,8 @@ public class IngredientController : MonoBehaviour
         if (isDragging)
         {
             transform.position = new Vector3(worldPos.x + dragOffset.x, worldPos.y + dragOffset.y, 0f);
+            ApplyPerspectiveScale();
+            UpdateSortingOrder();
         }
 
         // ── 3. RELEASE TRIGGER ──
@@ -86,11 +93,20 @@ public class IngredientController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // ── 4. MANUAL ACCELERATION FALLOUT ──
         if (isFallingToFloor && !isDragging)
         {
             HandleManualGravityAndBounce();
         }
+    }
+
+    public void StartDragFromSource(Vector3 clickWorldPos)
+    {
+        isDragging = true;
+        isFallingToFloor = false;
+        bounceCount = 0;
+        customVelocity = Vector2.zero;
+        dragOffset = transform.position - clickWorldPos;
+        dragOffset.z = 0f;
     }
 
     void StartDrag(Vector3 clickWorldPos)
@@ -127,7 +143,7 @@ public class IngredientController : MonoBehaviour
             sr.color = c;
         }
 
-        // ── BLENDER OVERLAP OVERRIDE ──
+        // ── BLENDER OVERLAP CHECK ──
         Collider2D[] hits = Physics2D.OverlapPointAll(new Vector2(transform.position.x, transform.position.y));
         foreach (Collider2D hit in hits)
         {
@@ -135,18 +151,53 @@ public class IngredientController : MonoBehaviour
 
             if (hit.TryGetComponent<BlenderController>(out var blender))
             {
-                blender.AddIngredient(this.ingredientData);
-                Destroy(gameObject);
+                blender.SnapAndAddIngredient(this);
                 return;
             }
         }
 
-        // ── CALC DROP LIMIT GROUND DEPTH LINE ──
-        targetFloorY = Mathf.Clamp(transform.position.y, floorBottomY, floorTopY);
+        // ── 🛠️ SMART VERTICAL DROP LAYER DETECTION ──
+        bool overTableHorizontalSpace = false;
+        float tableSurfaceY = floorTopY;
 
+        // Find the KitchenTable collider in your active scene workspace
+        GameObject tableObj = GameObject.Find("KitchenTable");
+        if (tableObj != null)
+        {
+            Collider2D tableCollider = tableObj.GetComponent<Collider2D>();
+            if (tableCollider != null)
+            {
+                float leftEdge = tableCollider.bounds.min.x;
+                float rightEdge = tableCollider.bounds.max.x;
+
+                // Is the ingredient's current X position directly within the table's left and right sides?
+                if (transform.position.x >= leftEdge && transform.position.x <= rightEdge)
+                {
+                    // If we are dropped above the table surface line, the table is our new floor floor!
+                    tableSurfaceY = tableCollider.bounds.max.y;
+
+                    if (transform.position.y >= tableSurfaceY - 0.5f)
+                    {
+                        overTableHorizontalSpace = true;
+                    }
+                }
+            }
+        }
+
+        // Determine where this item should eventually land and bounce
+        if (overTableHorizontalSpace)
+        {
+            targetFloorY = tableSurfaceY; // Land right on top of the counter surface line!
+        }
+        else
+        {
+            // Missed the table completely! Fall all the way down to the kitchen floorboards
+            targetFloorY = Mathf.Clamp(transform.position.y, floorBottomY, floorTopY);
+        }
+
+        // Start the manual gravity falling physics sequence down to our chosen landing target floor
         customVelocity = Vector2.zero;
         isFallingToFloor = true;
-        UpdateSortingOrder();
     }
 
     void HandleManualGravityAndBounce()
@@ -177,6 +228,18 @@ public class IngredientController : MonoBehaviour
                 UpdateSortingOrder();
             }
         }
+
+        ApplyPerspectiveScale();
+    }
+
+    // ── TASK 2: BLUEY PERSPECTIVE SCALE CALCULATION ──
+    void ApplyPerspectiveScale()
+    {
+        // Calculate percentage tracking between top wall line and bottom screen edge line
+        float t = Mathf.InverseLerp(floorTopY, floorBottomY, transform.position.y);
+        float currentScaleMultiplier = Mathf.Lerp(minScaleMultiplier, maxScaleMultiplier, t);
+
+        transform.localScale = baseLocalScale * currentScaleMultiplier;
     }
 
     void UpdateSortingOrder()
@@ -186,31 +249,14 @@ public class IngredientController : MonoBehaviour
         sr.sortingOrder = Mathf.RoundToInt(Mathf.Lerp(5, 50, t));
     }
 
-    // ─────────────────────────────────────────────
-    // STABILIZED INPUT HELPERS
-    // ─────────────────────────────────────────────
     Vector3 GetWorldPos()
     {
         Vector2 screenPos = Vector2.zero;
-        bool foundTouch = false;
 
-        if (Touchscreen.current != null)
+        // Pointer tracks BOTH Mouse position and Touchscreen primary finger position automatically
+        if (Pointer.current != null)
         {
-            var activeTouches = Touchscreen.current.touches;
-            for (int i = 0; i < activeTouches.Count; i++)
-            {
-                if (activeTouches[i].press.isPressed)
-                {
-                    screenPos = activeTouches[i].position.ReadValue();
-                    foundTouch = true;
-                    break;
-                }
-            }
-        }
-
-        if (!foundTouch && Mouse.current != null)
-        {
-            screenPos = Mouse.current.position.ReadValue();
+            screenPos = Pointer.current.position.ReadValue();
         }
 
         if (screenPos == Vector2.zero) return transform.position;
@@ -222,27 +268,21 @@ public class IngredientController : MonoBehaviour
 
     bool InputPressed()
     {
-        if (Touchscreen.current != null)
+        if (Pointer.current != null)
         {
-            var activeTouches = Touchscreen.current.touches;
-            for (int i = 0; i < activeTouches.Count; i++)
-            {
-                if (activeTouches[i].press.wasPressedThisFrame) return true;
-            }
+            // Triggers on left-mouse-click OR mobile screen press down
+            return Pointer.current.press.wasPressedThisFrame;
         }
-        return Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame;
+        return false;
     }
 
     bool InputReleased()
     {
-        if (Touchscreen.current != null)
+        if (Pointer.current != null)
         {
-            var activeTouches = Touchscreen.current.touches;
-            for (int i = 0; i < activeTouches.Count; i++)
-            {
-                if (activeTouches[i].press.wasReleasedThisFrame) return true;
-            }
+            // Triggers when lifting mouse click OR lifting finger off screen
+            return Pointer.current.press.wasReleasedThisFrame;
         }
-        return Mouse.current != null && Mouse.current.leftButton.wasReleasedThisFrame;
+        return false;
     }
 }

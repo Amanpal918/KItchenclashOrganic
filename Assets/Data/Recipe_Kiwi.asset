@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Recipe_Kiwi
   m_EditorClassIdentifier: 
   resultName: Kiwi Shake
-  resultSprite: {fileID: 21300000, guid: eadeddc4b22fb6a4fa1e713cf2f0cba1, type: 3}
+  resultSprite: {fileID: 7484150837500698958, guid: 389245ff61f136d4192966d91b20ff61, type: 3}
   requiredIngredients:
   - {fileID: 11400000, guid: b01e61c8eada5504f8992c9b8f83e959, type: 2}
   - {fileID: 11400000, guid: e3b55bbe3954a784b97add91ec1336b8, type: 2}

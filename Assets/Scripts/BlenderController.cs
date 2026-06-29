@@ -1,15 +1,19 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(Collider2D))] // Needs a 2D Trigger Collider to detect dropped ingredients
+[RequireComponent(typeof(Collider2D))]
 public class BlenderController : MonoBehaviour
 {
     [Header("Data Configuration")]
     public List<RecipeData> allRecipes;
     public TMPro.TextMeshProUGUI uiFeedbackText;
 
-    [Header("Blender Visuals")]
-    public SpriteRenderer blenderSpriteRenderer; // Changed from UI Image to SpriteRenderer
+    [Header("Blender Visuals & Snapping")]
+    public SpriteRenderer blenderSpriteRenderer;
+    public Transform snapPoint;
+    [SerializeField] private float snapSpeed = 8f;
 
     [Header("Blender Sprites")]
     public Sprite emptyBlenderSprite;
@@ -22,6 +26,67 @@ public class BlenderController : MonoBehaviour
 
     private List<IngredientData> ingredientsInBlender = new List<IngredientData>();
     private RecipeData lastSuccessfulRecipe;
+    private Collider2D myCollider;
+
+    void Awake()
+    {
+        myCollider = GetComponent<Collider2D>();
+    }
+
+    void Update()
+    {
+        // ── BLUEY STYLE: TAP BLENDER TO BLEND ──
+        if (InputPressed())
+        {
+            Vector3 worldPos = GetWorldPos();
+            RaycastHit2D hit = Physics2D.Raycast(new Vector2(worldPos.x, worldPos.y), Vector2.zero);
+
+            // If the player clicked directly on the blender, start the recipe!
+            if (hit.collider != null && hit.collider == myCollider)
+            {
+                // Only blend if there are actually ingredients inside
+                if (ingredientsInBlender.Count > 0)
+                {
+                    OnBlendButtonPressed();
+                }
+            }
+        }
+    }
+
+    public void SnapAndAddIngredient(IngredientController ingredient)
+    {
+        ingredient.enabled = false;
+        StartCoroutine(AnimateSnapToMouth(ingredient));
+    }
+
+    private IEnumerator AnimateSnapToMouth(IngredientController ingredient)
+    {
+        Vector3 targetPos = snapPoint != null ? snapPoint.position : transform.position;
+        targetPos.z = 0f;
+
+        while (Vector3.Distance(ingredient.transform.position, targetPos) > 0.05f)
+        {
+            ingredient.transform.position = Vector3.Lerp(
+                ingredient.transform.position,
+                targetPos,
+                Time.deltaTime * snapSpeed
+            );
+            yield return null;
+        }
+
+        AddIngredient(ingredient.ingredientData);
+
+        if (ingredient.gameObject.name.Contains("(Clone)"))
+        {
+            Destroy(ingredient.gameObject);
+        }
+        else
+        {
+            ingredient.enabled = true;
+            ingredient.transform.position += new Vector3(-1.5f, -0.5f, 0f);
+            ingredient.StopDrag();
+        }
+    }
 
     public void AddIngredient(IngredientData data)
     {
@@ -101,5 +166,30 @@ public class BlenderController : MonoBehaviour
     {
         ingredientsInBlender.Clear();
         if (blenderSpriteRenderer != null) blenderSpriteRenderer.sprite = emptyBlenderSprite;
+    }
+
+    // ── STABILIZED INPUT HELPERS FOR BOTH EDITOR & MOBILE ──
+
+    private Vector3 GetWorldPos()
+    {
+        Vector2 screenPos = Vector2.zero;
+        if (Pointer.current != null)
+        {
+            screenPos = Pointer.current.position.ReadValue();
+        }
+        if (screenPos == Vector2.zero) return transform.position;
+
+        Vector3 world = Camera.main.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, 0f));
+        world.z = 0f;
+        return world;
+    }
+
+    private bool InputPressed()
+    {
+        if (Pointer.current != null)
+        {
+            return Pointer.current.press.wasPressedThisFrame;
+        }
+        return false;
     }
 }

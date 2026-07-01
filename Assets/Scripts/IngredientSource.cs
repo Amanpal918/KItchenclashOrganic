@@ -152,7 +152,7 @@ public class IngredientSource : MonoBehaviour
             for (int i = 0; i < activeTouches.Count; i++)
             {
                 if (activeTouches[i].press.wasPressedThisFrame) return true;
-            }
+            }       
         }
         return Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame;
     }

@@ -183,6 +183,8 @@ MonoBehaviour:
   ingredientData: {fileID: 11400000, guid: b01e61c8eada5504f8992c9b8f83e959, type: 2}
   floorTopY: -1.64
   floorBottomY: -8.69
+  minScaleMultiplier: 1
+  maxScaleMultiplier: 2
   gravity: 25
   baseBounceForce: 5
   bounciness: 0.5

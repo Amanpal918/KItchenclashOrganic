@@ -34,6 +34,8 @@ public class IngredientController : MonoBehaviour
     private Rigidbody2D rb;
 
     public bool IsDragging => isDragging;
+    private FridgeShelfZone overlappingFridgeShelf;
+    private bool isSlottedInFridge = false;
 
     void Awake()
     {
@@ -65,7 +67,10 @@ public class IngredientController : MonoBehaviour
         // ── 1. PRESS TRIGGER ──
         if (InputPressed() && !isDragging)
         {
-            RaycastHit2D[] hits = Physics2D.RaycastAll(new Vector2(worldPos.x, worldPos.y), Vector2.zero);
+            // Create a mask targeting only the Ingredients layer (Layer 6, 7, etc.)
+            int ingredientLayerMask = LayerMask.GetMask("Ingredients");
+
+            RaycastHit2D[] hits = Physics2D.RaycastAll(new Vector2(worldPos.x, worldPos.y), Vector2.zero, Mathf.Infinity, ingredientLayerMask);
             foreach (RaycastHit2D hit in hits)
             {
                 if (hit.collider == myCollider)
@@ -80,7 +85,34 @@ public class IngredientController : MonoBehaviour
         if (isDragging)
         {
             transform.position = new Vector3(worldPos.x + dragOffset.x, worldPos.y + dragOffset.y, 0f);
-            ApplyPerspectiveScale();
+
+            var milkPourer = GetComponentInChildren<MilkPourer>();
+            if (milkPourer != null)
+            {
+                Collider2D[] hits = Physics2D.OverlapPointAll(new Vector2(transform.position.x, transform.position.y));
+                Collider2D containerCollider = null;
+
+                foreach (Collider2D hit in hits)
+                {
+                    if (hit != myCollider && (hit.GetComponent<BlenderController>() != null || hit.gameObject.name.ToLower().Contains("glass")))
+                    {
+                        containerCollider = hit;
+                        break;
+                    }
+                }
+
+                // CRITICAL CHANGE: If we are near a container, update interaction. If we moved away, reset it!
+                if (containerCollider != null)
+                {
+                    milkPourer.UpdatePourInteraction(containerCollider);
+                }
+                else
+                {
+                    milkPourer.ResetPourState();
+                }
+            }
+
+            CheckFridgeShelfHover();
             UpdateSortingOrder();
         }
 
@@ -88,6 +120,32 @@ public class IngredientController : MonoBehaviour
         if (isDragging && InputReleased())
         {
             StopDrag();
+        }
+    }
+
+    // 🌟 EXTRACTED CORRECTLY OUT OF UPDATE SCOPE
+    void CheckFridgeShelfHover()
+    {
+        if (!isDragging) return;
+
+        // Sweep across all triggers under your finger/cursor position
+        Collider2D[] hits = Physics2D.OverlapPointAll(transform.position);
+        overlappingFridgeShelf = null;
+
+        foreach (Collider2D hit in hits)
+        {
+            if (hit.TryGetComponent<FridgeShelfZone>(out var shelf))
+            {
+                overlappingFridgeShelf = shelf;
+                break;
+            }
+        }
+
+        if (overlappingFridgeShelf != null && sr != null)
+        {
+            // 🌟 Layer Sandwich: Keep it cleanly over the back walls while dragging
+            sr.sortingLayerName = "Ingredients";
+            sr.sortingOrder = 50;
         }
     }
 
@@ -109,6 +167,8 @@ public class IngredientController : MonoBehaviour
         dragOffset.z = 0f;
     }
 
+    // Update these specific methods inside your IngredientController.cs
+
     void StartDrag(Vector3 clickWorldPos)
     {
         isDragging = true;
@@ -122,6 +182,9 @@ public class IngredientController : MonoBehaviour
 
         CameraPan.IsHoldingAnyItem = true;
 
+        // CRITICAL: Unparent from moving fridge doors instantly when grabbed
+        transform.SetParent(null);
+
         if (sr != null)
         {
             sr.sortingOrder = 100;
@@ -129,8 +192,12 @@ public class IngredientController : MonoBehaviour
             c.a = 0.7f;
             sr.color = c;
         }
+        if (isSlottedInFridge && overlappingFridgeShelf != null)
+        {
+            overlappingFridgeShelf.DeregisterLeavingItem(this);
+            isSlottedInFridge = false;
+        }
     }
-
     public void StopDrag()
     {
         isDragging = false;
@@ -143,7 +210,40 @@ public class IngredientController : MonoBehaviour
             sr.color = c;
         }
 
-        // ── BLENDER OVERLAP CHECK ──
+        // CRITICAL SAFETY FIX: Ensure pour states shut off immediately when letting go of the item anywhere
+        var milkPourer = GetComponentInChildren<MilkPourer>();
+        if (milkPourer != null)
+        {
+            milkPourer.ResetPourState();
+        }
+
+        // ── 1. IF RELEASED INSIDE A VALID FRIDGE GRID ROW ──
+        if (overlappingFridgeShelf != null)
+        {
+            Vector3 targetSnapPos = overlappingFridgeShelf.AddAndRearrangeShelf(this);
+            if (sr != null)
+            {
+                sr.sortingLayerName = "Ingredients";
+                sr.sortingOrder = 5;
+            }
+
+            isSlottedInFridge = true;
+            isFallingToFloor = false;
+            return;
+        }
+        // ── 2. IF DRAGGED OUTSIDE OF THE REFRIGERATOR COMPLETELY ──
+        else
+        {
+            if (isSlottedInFridge)
+            {
+                isSlottedInFridge = false;
+            }
+
+            transform.localScale = new Vector3(1f, 1f, 1f);
+            transform.SetParent(null);
+        }
+
+        // ── 3. RUN ORIGINAL BLENDER OVERLAP & COUNTER LANDING PHYSICS ──
         Collider2D[] hits = Physics2D.OverlapPointAll(new Vector2(transform.position.x, transform.position.y));
         foreach (Collider2D hit in hits)
         {
@@ -151,51 +251,65 @@ public class IngredientController : MonoBehaviour
 
             if (hit.TryGetComponent<BlenderController>(out var blender))
             {
-                blender.SnapAndAddIngredient(this);
-                return;
+                // Liquid containers pour out but don't drop inside the blender directly
+                if (milkPourer == null)
+                {
+                    blender.SnapAndAddIngredient(this);
+                    return;
+                }
+                else
+                {
+                    milkPourer.HandleReleaseOverBlender();
+                    return;
+                }
             }
         }
 
-        // ── 🛠️ SMART VERTICAL DROP LAYER DETECTION ──
+        ExecuteNormalFloorDrop();
+    }
+
+    private void ExecuteNormalFloorDrop()
+    {
         bool overTableHorizontalSpace = false;
         float tableSurfaceY = floorTopY;
 
-        // Find the KitchenTable collider in your active scene workspace
-        GameObject tableObj = GameObject.Find("KitchenTable");
-        if (tableObj != null)
+        // 🌟 CHECK OVEN TOP BASELINE AREA FIRST
+        GameObject ovenObj = GameObject.Find("Oven");
+        if (ovenObj != null)
         {
-            Collider2D tableCollider = tableObj.GetComponent<Collider2D>();
-            if (tableCollider != null)
+            Collider2D ovenCollider = ovenObj.GetComponent<Collider2D>();
+            if (ovenCollider != null)
             {
-                float leftEdge = tableCollider.bounds.min.x;
-                float rightEdge = tableCollider.bounds.max.x;
-
-                // Is the ingredient's current X position directly within the table's left and right sides?
-                if (transform.position.x >= leftEdge && transform.position.x <= rightEdge)
+                if (transform.position.x >= ovenCollider.bounds.min.x && transform.position.x <= ovenCollider.bounds.max.x)
                 {
-                    // If we are dropped above the table surface line, the table is our new floor floor!
-                    tableSurfaceY = tableCollider.bounds.max.y;
+                    tableSurfaceY = -1.35f; // Stove burner line height
+                    overTableHorizontalSpace = true;
+                }
+            }
+        }
 
-                    if (transform.position.y >= tableSurfaceY - 0.5f)
+        // 🌟 CHECK MAIN KITCHEN TABLE SECOND
+        if (!overTableHorizontalSpace)
+        {
+            GameObject tableObj = GameObject.Find("KitchenTable");
+            if (tableObj != null)
+            {
+                Collider2D tableCollider = tableObj.GetComponent<Collider2D>();
+                if (tableCollider != null)
+                {
+                    if (transform.position.x >= tableCollider.bounds.min.x && transform.position.x <= tableCollider.bounds.max.x)
                     {
-                        overTableHorizontalSpace = true;
+                        tableSurfaceY = tableCollider.bounds.max.y;
+                        if (transform.position.y >= tableSurfaceY - 0.5f)
+                        {
+                            overTableHorizontalSpace = true;
+                        }
                     }
                 }
             }
         }
 
-        // Determine where this item should eventually land and bounce
-        if (overTableHorizontalSpace)
-        {
-            targetFloorY = tableSurfaceY; // Land right on top of the counter surface line!
-        }
-        else
-        {
-            // Missed the table completely! Fall all the way down to the kitchen floorboards
-            targetFloorY = Mathf.Clamp(transform.position.y, floorBottomY, floorTopY);
-        }
-
-        // Start the manual gravity falling physics sequence down to our chosen landing target floor
+        targetFloorY = overTableHorizontalSpace ? tableSurfaceY : Mathf.Clamp(transform.position.y, floorBottomY, floorTopY);
         customVelocity = Vector2.zero;
         isFallingToFloor = true;
     }
@@ -229,22 +343,13 @@ public class IngredientController : MonoBehaviour
             }
         }
 
-        ApplyPerspectiveScale();
     }
 
-    // ── TASK 2: BLUEY PERSPECTIVE SCALE CALCULATION ──
-    void ApplyPerspectiveScale()
-    {
-        // Calculate percentage tracking between top wall line and bottom screen edge line
-        float t = Mathf.InverseLerp(floorTopY, floorBottomY, transform.position.y);
-        float currentScaleMultiplier = Mathf.Lerp(minScaleMultiplier, maxScaleMultiplier, t);
-
-        transform.localScale = baseLocalScale * currentScaleMultiplier;
-    }
+   
 
     void UpdateSortingOrder()
     {
-        if (sr == null) return;
+        if (sr == null || isSlottedInFridge) return;
         float t = Mathf.InverseLerp(floorTopY, floorBottomY, transform.position.y);
         sr.sortingOrder = Mathf.RoundToInt(Mathf.Lerp(5, 50, t));
     }
@@ -253,7 +358,6 @@ public class IngredientController : MonoBehaviour
     {
         Vector2 screenPos = Vector2.zero;
 
-        // Pointer tracks BOTH Mouse position and Touchscreen primary finger position automatically
         if (Pointer.current != null)
         {
             screenPos = Pointer.current.position.ReadValue();
@@ -270,7 +374,6 @@ public class IngredientController : MonoBehaviour
     {
         if (Pointer.current != null)
         {
-            // Triggers on left-mouse-click OR mobile screen press down
             return Pointer.current.press.wasPressedThisFrame;
         }
         return false;
@@ -280,7 +383,6 @@ public class IngredientController : MonoBehaviour
     {
         if (Pointer.current != null)
         {
-            // Triggers when lifting mouse click OR lifting finger off screen
             return Pointer.current.press.wasReleasedThisFrame;
         }
         return false;

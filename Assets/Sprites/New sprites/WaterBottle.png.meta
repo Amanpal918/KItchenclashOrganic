@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: fce922ae12173d54da8af05087c6db32
+guid: 90835fd695c096e40884f6897b3fff1e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5110731548806032159
-    second: milk_0
+      213: -5151533754777900160
+    second: WaterBottle_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,23 +126,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: milk_0
+      name: WaterBottle_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 59
-        height: 92
+        width: 217
+        height: 655
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1e4d803fbb80319b0800000000000000
-      internalID: -5110731548806032159
+      spriteID: 08b670218531288b0800000000000000
+      internalID: -5151533754777900160
       vertices: []
       indices: 
       edges: []
@@ -151,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 977a27ff3aed5fe46a8093ea5f1dfa45
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      milk_0: -5110731548806032159
+      WaterBottle_0: -5151533754777900160
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

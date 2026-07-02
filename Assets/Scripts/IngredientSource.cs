@@ -22,14 +22,8 @@ public class IngredientSource : MonoBehaviour
             Vector2 inputPos = GetInputPosition();
             Vector3 worldPos = GetWorldPos(inputPos);
 
-            // FIX: Only detect a click on the actual background source asset, ignoring existing items
-            RaycastHit2D hit = Physics2D.Raycast(
-                new Vector2(worldPos.x, worldPos.y),
-                Vector2.zero
-            );
-
-            // Make sure we hit the source container collider, AND we are NOT clicking an already spawned item
-            if (hit.collider == myCollider)
+            // 🛠️ FIX: Bypasses layer ordering entirely by checking if the point overlaps the collider directly
+            if (myCollider != null && myCollider.OverlapPoint(new Vector2(worldPos.x, worldPos.y)))
             {
                 SpawnCloneAtFinger(worldPos);
             }
@@ -93,7 +87,7 @@ public class IngredientSource : MonoBehaviour
             master = activeClone.AddComponent<IngredientController>();
         }
 
-        // Turn transparency on manually while the source is dragging it initial setup
+        // Turn transparency on manually while the source is dragging its initial setup
         SpriteRenderer sr = activeClone.GetComponent<SpriteRenderer>();
         if (sr != null)
         {
@@ -102,6 +96,14 @@ public class IngredientSource : MonoBehaviour
             c.a = 0.7f;
             sr.color = c;
         }
+
+        PerspectiveScaler scaler = activeClone.GetComponent<PerspectiveScaler>();
+        if (scaler != null)
+        {
+            scaler.CaptureBaseScale();
+        }
+        // Hand off initial frame settings directly to your IngredientController script instance
+        master.StartDragFromSource(fingerPos);
     }
 
     void DropCloneHere()
@@ -122,6 +124,7 @@ public class IngredientSource : MonoBehaviour
 
         activeClone = null;
     }
+
     Vector3 GetWorldPos(Vector2 screenPos)
     {
         if (screenPos == Vector2.zero) return transform.position;
@@ -152,7 +155,7 @@ public class IngredientSource : MonoBehaviour
             for (int i = 0; i < activeTouches.Count; i++)
             {
                 if (activeTouches[i].press.wasPressedThisFrame) return true;
-            }       
+            }
         }
         return Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame;
     }

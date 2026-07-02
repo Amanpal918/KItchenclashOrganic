@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2916958202210566258}
   - component: {fileID: 5525643188398886227}
   - component: {fileID: 476287808768185335}
+  - component: {fileID: 3570489842940477658}
   m_Layer: 6
   m_Name: KiwiClone
   m_TagString: Untagged
@@ -188,3 +189,19 @@ MonoBehaviour:
   gravity: 25
   baseBounceForce: 5
   bounciness: 0.5
+--- !u!114 &3570489842940477658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 779450417702087992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e05d81144538fe449d296149d3b0b84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PerspectiveScaler
+  floorTopY: -1.64
+  floorBottomY: -8.69
+  minScaleMultiplier: 0.7
+  maxScaleMultiplier: 2

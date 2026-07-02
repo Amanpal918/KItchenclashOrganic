@@ -20,6 +20,9 @@ public class IngredientController : MonoBehaviour
     [SerializeField] private float baseBounceForce = 5f;
     [SerializeField] private float bounciness = 0.5f;
 
+    [Header("🔄 Dispenser Settings")]
+    [SerializeField] private bool isSourceDispenser = false; // Check this true ONLY for the source items sitting permanently on the fridge door shelf!
+
     private bool isDragging = false;
     private bool justStartedDrag = false;
     private bool isFallingToFloor = false;
@@ -64,20 +67,12 @@ public class IngredientController : MonoBehaviour
 
         Vector3 worldPos = GetWorldPos();
 
-        // ── 1. PRESS TRIGGER ──
+        // ── 1. PRESS TRIGGER (Direct Overlap Point check) ──
         if (InputPressed() && !isDragging)
         {
-            // Create a mask targeting only the Ingredients layer (Layer 6, 7, etc.)
-            int ingredientLayerMask = LayerMask.GetMask("Ingredients");
-
-            RaycastHit2D[] hits = Physics2D.RaycastAll(new Vector2(worldPos.x, worldPos.y), Vector2.zero, Mathf.Infinity, ingredientLayerMask);
-            foreach (RaycastHit2D hit in hits)
+            if (myCollider != null && myCollider.OverlapPoint(new Vector2(worldPos.x, worldPos.y)))
             {
-                if (hit.collider == myCollider)
-                {
-                    StartDrag(worldPos);
-                    break;
-                }
+                StartDrag(worldPos);
             }
         }
 
@@ -86,29 +81,43 @@ public class IngredientController : MonoBehaviour
         {
             transform.position = new Vector3(worldPos.x + dragOffset.x, worldPos.y + dragOffset.y, 0f);
 
+            // Dynamically search for specialized child pourers
             var milkPourer = GetComponentInChildren<MilkPourer>();
-            if (milkPourer != null)
+            var waterPourer = GetComponentInChildren<WaterPourer>();
+
+            if (milkPourer != null || waterPourer != null)
             {
                 Collider2D[] hits = Physics2D.OverlapPointAll(new Vector2(transform.position.x, transform.position.y));
                 Collider2D containerCollider = null;
 
                 foreach (Collider2D hit in hits)
                 {
-                    if (hit != myCollider && (hit.GetComponent<BlenderController>() != null || hit.gameObject.name.ToLower().Contains("glass")))
+                    if (hit != myCollider)
                     {
-                        containerCollider = hit;
-                        break;
+                        // 🌟 MULTI-CONTAINER SUPPORT: Trigger pour animations if hovering over Blender, Glass, or any Bowl!
+                        bool isValidContainer = hit.GetComponent<BlenderController>() != null ||
+                                                hit.gameObject.name.ToLower().Contains("glass") ||
+                                                hit.gameObject.name.ToLower().Contains("bowl") ||
+                                                hit.gameObject.tag == "Container";
+
+                        if (isValidContainer)
+                        {
+                            containerCollider = hit;
+                            break;
+                        }
                     }
                 }
 
-                // CRITICAL CHANGE: If we are near a container, update interaction. If we moved away, reset it!
+                // Send interactions to whichever specialized pourer component script is active on this prefab instance
                 if (containerCollider != null)
                 {
-                    milkPourer.UpdatePourInteraction(containerCollider);
+                    if (milkPourer != null) milkPourer.UpdatePourInteraction(containerCollider);
+                    if (waterPourer != null) waterPourer.UpdatePourInteraction(containerCollider);
                 }
                 else
                 {
-                    milkPourer.ResetPourState();
+                    if (milkPourer != null) milkPourer.ResetPourState();
+                    if (waterPourer != null) waterPourer.ResetPourState();
                 }
             }
 
@@ -123,12 +132,10 @@ public class IngredientController : MonoBehaviour
         }
     }
 
-    // 🌟 EXTRACTED CORRECTLY OUT OF UPDATE SCOPE
     void CheckFridgeShelfHover()
     {
         if (!isDragging) return;
 
-        // Sweep across all triggers under your finger/cursor position
         Collider2D[] hits = Physics2D.OverlapPointAll(transform.position);
         overlappingFridgeShelf = null;
 
@@ -143,7 +150,7 @@ public class IngredientController : MonoBehaviour
 
         if (overlappingFridgeShelf != null && sr != null)
         {
-            // 🌟 Layer Sandwich: Keep it cleanly over the back walls while dragging
+            // Keep it cleanly over background elements while dragging around the cabinet rows
             sr.sortingLayerName = "Ingredients";
             sr.sortingOrder = 50;
         }
@@ -157,20 +164,57 @@ public class IngredientController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Invoked automatically on the recycled clone object by the source button initialization script.
+    /// </summary>
     public void StartDragFromSource(Vector3 clickWorldPos)
     {
         isDragging = true;
+        justStartedDrag = true;
         isFallingToFloor = false;
         bounceCount = 0;
         customVelocity = Vector2.zero;
-        dragOffset = transform.position - clickWorldPos;
-        dragOffset.z = 0f;
-    }
 
-    // Update these specific methods inside your IngredientController.cs
+        // Force the drag offset to zero initially since the source spawned it exactly on your cursor position
+        dragOffset = Vector3.zero;
+
+        CameraPan.IsHoldingAnyItem = true;
+        transform.SetParent(null);
+
+        if (sr != null)
+        {
+            sr.sortingLayerName = "Ingredients";
+            sr.sortingOrder = 100;
+            Color c = sr.color;
+            c.a = 0.7f;
+            sr.color = c;
+        }
+
+        if (isSlottedInFridge && overlappingFridgeShelf != null)
+        {
+            overlappingFridgeShelf.DeregisterLeavingItem(this);
+            isSlottedInFridge = false;
+        }
+    }
 
     void StartDrag(Vector3 clickWorldPos)
     {
+        // 🌟 OBJECT POOLING SPARK: If this item is designated as an infinite dispenser source button, pull from pool!
+        if (isSourceDispenser)
+        {
+            GameObject cloneObj = TrashAndPoolManager.Instance.GetPooledIngredient(gameObject, transform.position, transform.rotation);
+
+            IngredientController cloneController = cloneObj.GetComponent<IngredientController>();
+            if (cloneController != null)
+            {
+                cloneController.isSourceDispenser = false;
+                cloneController.isSlottedInFridge = false;
+                cloneController.overlappingFridgeShelf = null;
+                cloneController.StartDragFromSource(clickWorldPos);
+            }
+            return; // Abort remaining drag routines on this source template so it stays permanently locked inside the fridge!
+        }
+
         isDragging = true;
         justStartedDrag = true;
         isFallingToFloor = false;
@@ -181,12 +225,11 @@ public class IngredientController : MonoBehaviour
         dragOffset.z = 0f;
 
         CameraPan.IsHoldingAnyItem = true;
-
-        // CRITICAL: Unparent from moving fridge doors instantly when grabbed
         transform.SetParent(null);
 
         if (sr != null)
         {
+            sr.sortingLayerName = "Ingredients";
             sr.sortingOrder = 100;
             Color c = sr.color;
             c.a = 0.7f;
@@ -198,6 +241,7 @@ public class IngredientController : MonoBehaviour
             isSlottedInFridge = false;
         }
     }
+
     public void StopDrag()
     {
         isDragging = false;
@@ -210,11 +254,17 @@ public class IngredientController : MonoBehaviour
             sr.color = c;
         }
 
-        // CRITICAL SAFETY FIX: Ensure pour states shut off immediately when letting go of the item anywhere
+        // Shut off active pour emissions immediately on release
         var milkPourer = GetComponentInChildren<MilkPourer>();
-        if (milkPourer != null)
+        var waterPourer = GetComponentInChildren<WaterPourer>();
+        if (milkPourer != null) milkPourer.ResetPourState();
+        if (waterPourer != null) waterPourer.ResetPourState();
+
+        // 🌟 TRASH CAN OVERRIDE: If the user drops this clone inside the trash can boundary, recycle it instantly!
+        if (TrashAndPoolManager.Instance.IsOverTrashCan(transform.position))
         {
-            milkPourer.ResetPourState();
+            TrashAndPoolManager.Instance.RecycleToPool(gameObject);
+            return; // Abort remainder of sorting layouts or dropping physics calculations!
         }
 
         // ── 1. IF RELEASED INSIDE A VALID FRIDGE GRID ROW ──
@@ -238,8 +288,6 @@ public class IngredientController : MonoBehaviour
             {
                 isSlottedInFridge = false;
             }
-
-            transform.localScale = new Vector3(1f, 1f, 1f);
             transform.SetParent(null);
         }
 
@@ -251,15 +299,15 @@ public class IngredientController : MonoBehaviour
 
             if (hit.TryGetComponent<BlenderController>(out var blender))
             {
-                // Liquid containers pour out but don't drop inside the blender directly
-                if (milkPourer == null)
+                if (milkPourer == null && waterPourer == null)
                 {
                     blender.SnapAndAddIngredient(this);
                     return;
                 }
                 else
                 {
-                    milkPourer.HandleReleaseOverBlender();
+                    if (milkPourer != null) milkPourer.HandleReleaseOverBlender();
+                    if (waterPourer != null) waterPourer.HandleReleaseOverBlender();
                     return;
                 }
             }
@@ -273,7 +321,7 @@ public class IngredientController : MonoBehaviour
         bool overTableHorizontalSpace = false;
         float tableSurfaceY = floorTopY;
 
-        // 🌟 CHECK OVEN TOP BASELINE AREA FIRST
+        // Check Oven Top height line boundaries
         GameObject ovenObj = GameObject.Find("Oven");
         if (ovenObj != null)
         {
@@ -282,13 +330,13 @@ public class IngredientController : MonoBehaviour
             {
                 if (transform.position.x >= ovenCollider.bounds.min.x && transform.position.x <= ovenCollider.bounds.max.x)
                 {
-                    tableSurfaceY = -1.35f; // Stove burner line height
+                    tableSurfaceY = -1.35f;
                     overTableHorizontalSpace = true;
                 }
             }
         }
 
-        // 🌟 CHECK MAIN KITCHEN TABLE SECOND
+        // Check Main Kitchen Table height line boundaries
         if (!overTableHorizontalSpace)
         {
             GameObject tableObj = GameObject.Find("KitchenTable");
@@ -342,10 +390,7 @@ public class IngredientController : MonoBehaviour
                 UpdateSortingOrder();
             }
         }
-
     }
-
-   
 
     void UpdateSortingOrder()
     {
@@ -357,34 +402,13 @@ public class IngredientController : MonoBehaviour
     Vector3 GetWorldPos()
     {
         Vector2 screenPos = Vector2.zero;
-
-        if (Pointer.current != null)
-        {
-            screenPos = Pointer.current.position.ReadValue();
-        }
-
+        if (Pointer.current != null) screenPos = Pointer.current.position.ReadValue();
         if (screenPos == Vector2.zero) return transform.position;
-
         Vector3 world = Camera.main.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, 0f));
         world.z = 0f;
         return world;
     }
 
-    bool InputPressed()
-    {
-        if (Pointer.current != null)
-        {
-            return Pointer.current.press.wasPressedThisFrame;
-        }
-        return false;
-    }
-
-    bool InputReleased()
-    {
-        if (Pointer.current != null)
-        {
-            return Pointer.current.press.wasReleasedThisFrame;
-        }
-        return false;
-    }
+    bool InputPressed() => Pointer.current != null && Pointer.current.press.wasPressedThisFrame;
+    bool InputReleased() => Pointer.current != null && Pointer.current.press.wasReleasedThisFrame;
 }

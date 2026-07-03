@@ -20,6 +20,10 @@ public class IngredientController : MonoBehaviour
     [SerializeField] private float baseBounceForce = 5f;
     [SerializeField] private float bounciness = 0.5f;
 
+    [Header("📐 Individual Placement Tuning")]
+    [Tooltip("Adjust this per-prefab to nudge items up (+) or down (-) when landing on the counter.")]
+    [SerializeField] private float counterLandingOffset = 0f;
+
     [Header("🔄 Dispenser Settings")]
     [SerializeField] private bool isSourceDispenser = false; // Check this true ONLY for the source items sitting permanently on the fridge door shelf!
 
@@ -260,8 +264,8 @@ public class IngredientController : MonoBehaviour
         if (milkPourer != null) milkPourer.ResetPourState();
         if (waterPourer != null) waterPourer.ResetPourState();
 
-        // 🌟 TRASH CAN OVERRIDE: If the user drops this clone inside the trash can boundary, recycle it instantly!
-        if (TrashAndPoolManager.Instance.IsOverTrashCan(transform.position))
+        // 🌟 TRASH CAN OVERRIDE: Uses geometric bounds center to calculate alignment hits perfectly
+        if (myCollider != null && TrashAndPoolManager.Instance.IsOverTrashCan(myCollider.bounds.center))
         {
             TrashAndPoolManager.Instance.RecycleToPool(gameObject);
             return; // Abort remainder of sorting layouts or dropping physics calculations!
@@ -271,14 +275,12 @@ public class IngredientController : MonoBehaviour
         if (overlappingFridgeShelf != null)
         {
             Vector3 targetSnapPos = overlappingFridgeShelf.AddAndRearrangeShelf(this);
-            if (sr != null)
-            {
-                sr.sortingLayerName = "Ingredients";
-                sr.sortingOrder = 5;
-            }
 
-            isSlottedInFridge = true;
-            isFallingToFloor = false;
+            // Instantly updates position coordinates to prevent floating or drops
+            transform.position = targetSnapPos;
+
+            // Recycles the object clean out of the active scene instantly!
+            TrashAndPoolManager.Instance.RecycleToPool(gameObject);
             return;
         }
         // ── 2. IF DRAGGED OUTSIDE OF THE REFRIGERATOR COMPLETELY ──
@@ -318,46 +320,60 @@ public class IngredientController : MonoBehaviour
 
     private void ExecuteNormalFloorDrop()
     {
-        bool overTableHorizontalSpace = false;
-        float tableSurfaceY = floorTopY;
+        bool landedOnSurface = false;
 
-        // Check Oven Top height line boundaries
-        GameObject ovenObj = GameObject.Find("Oven");
-        if (ovenObj != null)
+        // ── 1. CHECK THE KITCHEN TABLE COUNTER BOUNDARIES ──
+        GameObject tableObj = GameObject.Find("KitchenTable");
+        if (tableObj != null)
         {
-            Collider2D ovenCollider = ovenObj.GetComponent<Collider2D>();
-            if (ovenCollider != null)
+            Collider2D tableCollider = tableObj.GetComponent<Collider2D>();
+            if (tableCollider != null)
             {
-                if (transform.position.x >= ovenCollider.bounds.min.x && transform.position.x <= ovenCollider.bounds.max.x)
+                // Rule A: Is the item horizontally between the left and right edges of the table?
+                bool withinHorizontalBounds = transform.position.x >= tableCollider.bounds.min.x &&
+                                              transform.position.x <= tableCollider.bounds.max.x;
+
+                // Rule B: Is the item physically ABOVE the table surface when dropped?
+                bool isAboveTable = transform.position.y >= tableCollider.bounds.max.y - 0.2f;
+
+                if (withinHorizontalBounds && isAboveTable)
                 {
-                    tableSurfaceY = -1.35f;
-                    overTableHorizontalSpace = true;
+                    targetFloorY = tableCollider.bounds.max.y + counterLandingOffset;
+                    landedOnSurface = true;
                 }
             }
         }
 
-        // Check Main Kitchen Table height line boundaries
-        if (!overTableHorizontalSpace)
+        // ── 2. CHECK THE OVEN BOUNDARIES ──
+        if (!landedOnSurface)
         {
-            GameObject tableObj = GameObject.Find("KitchenTable");
-            if (tableObj != null)
+            GameObject ovenObj = GameObject.Find("Oven");
+            if (ovenObj != null)
             {
-                Collider2D tableCollider = tableObj.GetComponent<Collider2D>();
-                if (tableCollider != null)
+                Collider2D ovenCollider = ovenObj.GetComponent<Collider2D>();
+                if (ovenCollider != null)
                 {
-                    if (transform.position.x >= tableCollider.bounds.min.x && transform.position.x <= tableCollider.bounds.max.x)
+                    bool withinOvenHorizontal = transform.position.x >= ovenCollider.bounds.min.x &&
+                                                transform.position.x <= ovenCollider.bounds.max.x;
+
+                    bool isAboveOven = transform.position.y >= -1.35f - 0.2f;
+
+                    if (withinOvenHorizontal && isAboveOven)
                     {
-                        tableSurfaceY = tableCollider.bounds.max.y;
-                        if (transform.position.y >= tableSurfaceY - 0.5f)
-                        {
-                            overTableHorizontalSpace = true;
-                        }
+                        targetFloorY = -1.35f + counterLandingOffset;
+                        landedOnSurface = true;
                     }
                 }
             }
         }
 
-        targetFloorY = overTableHorizontalSpace ? tableSurfaceY : Mathf.Clamp(transform.position.y, floorBottomY, floorTopY);
+        // ── 3. FALLBACK: IF DROPPED BELOW COUNTERS OR OVER OPEN AIR ──
+        if (!landedOnSurface)
+        {
+            // Lands naturally on the lower floorboard line without snapping back up!
+            targetFloorY = Mathf.Clamp(transform.position.y, floorBottomY, floorTopY);
+        }
+
         customVelocity = Vector2.zero;
         isFallingToFloor = true;
     }

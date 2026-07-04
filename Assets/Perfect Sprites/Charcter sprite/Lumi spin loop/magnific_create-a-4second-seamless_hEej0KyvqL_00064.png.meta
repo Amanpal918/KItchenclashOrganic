@@ -1,0 +1,819 @@
+fileFormatVersion: 2
+guid: 600ff1250178af0429128249cc76624e
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -8631043631150774149
+    second: magnific_create-a-4second-seamless_hEej0KyvqL_00064_0
+  - first:
+      213: 221287146763765330
+    second: magnific_create-a-4second-seamless_hEej0KyvqL_00064_1
+  - first:
+      213: 3730843553727615631
+    second: magnific_create-a-4second-seamless_hEej0KyvqL_00064_2
+  - first:
+      213: -4983033154392769092
+    second: magnific_create-a-4second-seamless_hEej0KyvqL_00064_3
+  - first:
+      213: 1772636266266914800
+    second: magnific_create-a-4second-seamless_hEej0KyvqL_00064_4
+  - first:
+      213: -3587471103154089639
+    second: magnific_create-a-4second-seamless_hEej0KyvqL_00064_5
+  - first:
+      213: -8866399535421534517
+    second: magnific_create-a-4second-seamless_hEej0KyvqL_00064_6
+  - first:
+      213: 3679245600525637244
+    second: magnific_create-a-4second-seamless_hEej0KyvqL_00064_7
+  - first:
+      213: 5077305842389091310
+    second: magnific_create-a-4second-seamless_hEej0KyvqL_00064_8
+  - first:
+      213: 6246372403455945593
+    second: magnific_create-a-4second-seamless_hEej0KyvqL_00064_9
+  - first:
+      213: 1576711909721460441
+    second: magnific_create-a-4second-seamless_hEej0KyvqL_00064_10
+  - first:
+      213: 5186809650910858027
+    second: magnific_create-a-4second-seamless_hEej0KyvqL_00064_11
+  - first:
+      213: 791530720642801407
+    second: magnific_create-a-4second-seamless_hEej0KyvqL_00064_12
+  - first:
+      213: 1489516259647228262
+    second: magnific_create-a-4second-seamless_hEej0KyvqL_00064_13
+  - first:
+      213: 3713852203605646479
+    second: magnific_create-a-4second-seamless_hEej0KyvqL_00064_14
+  - first:
+      213: -6146913278084263924
+    second: magnific_create-a-4second-seamless_hEej0KyvqL_00064_15
+  - first:
+      213: 1215365655205441570
+    second: magnific_create-a-4second-seamless_hEej0KyvqL_00064_16
+  - first:
+      213: -7598447529651658374
+    second: magnific_create-a-4second-seamless_hEej0KyvqL_00064_17
+  - first:
+      213: 8728962563214197590
+    second: magnific_create-a-4second-seamless_hEej0KyvqL_00064_18
+  - first:
+      213: 6895278195371989046
+    second: magnific_create-a-4second-seamless_hEej0KyvqL_00064_19
+  - first:
+      213: -1332160501698771374
+    second: magnific_create-a-4second-seamless_hEej0KyvqL_00064_20
+  - first:
+      213: -7443014908953040639
+    second: magnific_create-a-4second-seamless_hEej0KyvqL_00064_21
+  - first:
+      213: 6393495260661218354
+    second: magnific_create-a-4second-seamless_hEej0KyvqL_00064_22
+  - first:
+      213: 3935597728396633328
+    second: magnific_create-a-4second-seamless_hEej0KyvqL_00064_23
+  - first:
+      213: 7327727079192179384
+    second: magnific_create-a-4second-seamless_hEej0KyvqL_00064_24
+  - first:
+      213: -1972475090647089535
+    second: magnific_create-a-4second-seamless_hEej0KyvqL_00064_25
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: magnific_create-a-4second-seamless_hEej0KyvqL_00064_0
+      rect:
+        serializedVersion: 2
+        x: 308
+        y: 507
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b784c54fb8f583880800000000000000
+      internalID: -8631043631150774149
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magnific_create-a-4second-seamless_hEej0KyvqL_00064_1
+      rect:
+        serializedVersion: 2
+        x: 349
+        y: 500
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 256c630dc7b221300800000000000000
+      internalID: 221287146763765330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magnific_create-a-4second-seamless_hEej0KyvqL_00064_2
+      rect:
+        serializedVersion: 2
+        x: 425
+        y: 153
+        width: 307
+        height: 587
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f829d7cf17e96c330800000000000000
+      internalID: 3730843553727615631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magnific_create-a-4second-seamless_hEej0KyvqL_00064_3
+      rect:
+        serializedVersion: 2
+        x: 302
+        y: 487
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cbdbc605fb5b8dab0800000000000000
+      internalID: -4983033154392769092
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magnific_create-a-4second-seamless_hEej0KyvqL_00064_4
+      rect:
+        serializedVersion: 2
+        x: 323
+        y: 485
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ff60d6da4ba99810800000000000000
+      internalID: 1772636266266914800
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magnific_create-a-4second-seamless_hEej0KyvqL_00064_5
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 480
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9519586f90eb63ec0800000000000000
+      internalID: -3587471103154089639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magnific_create-a-4second-seamless_hEej0KyvqL_00064_6
+      rect:
+        serializedVersion: 2
+        x: 307
+        y: 468
+        width: 12
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bcec286499834f480800000000000000
+      internalID: -8866399535421534517
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magnific_create-a-4second-seamless_hEej0KyvqL_00064_7
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 474
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c76dfb4516e4f0330800000000000000
+      internalID: 3679245600525637244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magnific_create-a-4second-seamless_hEej0KyvqL_00064_8
+      rect:
+        serializedVersion: 2
+        x: 366
+        y: 471
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee30e9f43c6367640800000000000000
+      internalID: 5077305842389091310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magnific_create-a-4second-seamless_hEej0KyvqL_00064_9
+      rect:
+        serializedVersion: 2
+        x: 396
+        y: 473
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 97b6bc23b929fa650800000000000000
+      internalID: 6246372403455945593
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magnific_create-a-4second-seamless_hEej0KyvqL_00064_10
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 452
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9de431cc02b91e510800000000000000
+      internalID: 1576711909721460441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magnific_create-a-4second-seamless_hEej0KyvqL_00064_11
+      rect:
+        serializedVersion: 2
+        x: 326
+        y: 446
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b2b0c1885ef3bf740800000000000000
+      internalID: 5186809650910858027
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magnific_create-a-4second-seamless_hEej0KyvqL_00064_12
+      rect:
+        serializedVersion: 2
+        x: 332
+        y: 425
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ffe19b82ff41cfa00800000000000000
+      internalID: 791530720642801407
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magnific_create-a-4second-seamless_hEej0KyvqL_00064_13
+      rect:
+        serializedVersion: 2
+        x: 346
+        y: 426
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 66901777523dba410800000000000000
+      internalID: 1489516259647228262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magnific_create-a-4second-seamless_hEej0KyvqL_00064_14
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 405
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8c573007e04a8330800000000000000
+      internalID: 3713852203605646479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magnific_create-a-4second-seamless_hEej0KyvqL_00064_15
+      rect:
+        serializedVersion: 2
+        x: 358
+        y: 391
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c00d7aaf0f6c1baa0800000000000000
+      internalID: -6146913278084263924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magnific_create-a-4second-seamless_hEej0KyvqL_00064_16
+      rect:
+        serializedVersion: 2
+        x: 372
+        y: 364
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 220fab6cf98ddd010800000000000000
+      internalID: 1215365655205441570
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magnific_create-a-4second-seamless_hEej0KyvqL_00064_17
+      rect:
+        serializedVersion: 2
+        x: 385
+        y: 376
+        width: 30
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a712ba6ea34ec8690800000000000000
+      internalID: -7598447529651658374
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magnific_create-a-4second-seamless_hEej0KyvqL_00064_18
+      rect:
+        serializedVersion: 2
+        x: 355
+        y: 364
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 653c0160431832970800000000000000
+      internalID: 8728962563214197590
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magnific_create-a-4second-seamless_hEej0KyvqL_00064_19
+      rect:
+        serializedVersion: 2
+        x: 371
+        y: 353
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 638d4a66cf2f0bf50800000000000000
+      internalID: 6895278195371989046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magnific_create-a-4second-seamless_hEej0KyvqL_00064_20
+      rect:
+        serializedVersion: 2
+        x: 343
+        y: 324
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2564070f417338de0800000000000000
+      internalID: -1332160501698771374
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magnific_create-a-4second-seamless_hEej0KyvqL_00064_21
+      rect:
+        serializedVersion: 2
+        x: 353
+        y: 333
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 109eae5006915b890800000000000000
+      internalID: -7443014908953040639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magnific_create-a-4second-seamless_hEej0KyvqL_00064_22
+      rect:
+        serializedVersion: 2
+        x: 358
+        y: 305
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23cfadcb0124ab850800000000000000
+      internalID: 6393495260661218354
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magnific_create-a-4second-seamless_hEej0KyvqL_00064_23
+      rect:
+        serializedVersion: 2
+        x: 375
+        y: 292
+        width: 10
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f46ae3484d0e9630800000000000000
+      internalID: 3935597728396633328
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magnific_create-a-4second-seamless_hEej0KyvqL_00064_24
+      rect:
+        serializedVersion: 2
+        x: 394
+        y: 294
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b2b24e54f051b560800000000000000
+      internalID: 7327727079192179384
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: magnific_create-a-4second-seamless_hEej0KyvqL_00064_25
+      rect:
+        serializedVersion: 2
+        x: 417
+        y: 275
+        width: 10
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18e7cad0b5c50a4e0800000000000000
+      internalID: -1972475090647089535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      magnific_create-a-4second-seamless_hEej0KyvqL_00064_0: -8631043631150774149
+      magnific_create-a-4second-seamless_hEej0KyvqL_00064_1: 221287146763765330
+      magnific_create-a-4second-seamless_hEej0KyvqL_00064_10: 1576711909721460441
+      magnific_create-a-4second-seamless_hEej0KyvqL_00064_11: 5186809650910858027
+      magnific_create-a-4second-seamless_hEej0KyvqL_00064_12: 791530720642801407
+      magnific_create-a-4second-seamless_hEej0KyvqL_00064_13: 1489516259647228262
+      magnific_create-a-4second-seamless_hEej0KyvqL_00064_14: 3713852203605646479
+      magnific_create-a-4second-seamless_hEej0KyvqL_00064_15: -6146913278084263924
+      magnific_create-a-4second-seamless_hEej0KyvqL_00064_16: 1215365655205441570
+      magnific_create-a-4second-seamless_hEej0KyvqL_00064_17: -7598447529651658374
+      magnific_create-a-4second-seamless_hEej0KyvqL_00064_18: 8728962563214197590
+      magnific_create-a-4second-seamless_hEej0KyvqL_00064_19: 6895278195371989046
+      magnific_create-a-4second-seamless_hEej0KyvqL_00064_2: 3730843553727615631
+      magnific_create-a-4second-seamless_hEej0KyvqL_00064_20: -1332160501698771374
+      magnific_create-a-4second-seamless_hEej0KyvqL_00064_21: -7443014908953040639
+      magnific_create-a-4second-seamless_hEej0KyvqL_00064_22: 6393495260661218354
+      magnific_create-a-4second-seamless_hEej0KyvqL_00064_23: 3935597728396633328
+      magnific_create-a-4second-seamless_hEej0KyvqL_00064_24: 7327727079192179384
+      magnific_create-a-4second-seamless_hEej0KyvqL_00064_25: -1972475090647089535
+      magnific_create-a-4second-seamless_hEej0KyvqL_00064_3: -4983033154392769092
+      magnific_create-a-4second-seamless_hEej0KyvqL_00064_4: 1772636266266914800
+      magnific_create-a-4second-seamless_hEej0KyvqL_00064_5: -3587471103154089639
+      magnific_create-a-4second-seamless_hEej0KyvqL_00064_6: -8866399535421534517
+      magnific_create-a-4second-seamless_hEej0KyvqL_00064_7: 3679245600525637244
+      magnific_create-a-4second-seamless_hEej0KyvqL_00064_8: 5077305842389091310
+      magnific_create-a-4second-seamless_hEej0KyvqL_00064_9: 6246372403455945593
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

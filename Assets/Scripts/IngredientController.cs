@@ -271,29 +271,16 @@ public class IngredientController : MonoBehaviour
             return; // Abort remainder of sorting layouts or dropping physics calculations!
         }
 
-        // ── 1. IF RELEASED INSIDE A VALID FRIDGE GRID ROW ──
-        if (overlappingFridgeShelf != null)
-        {
-            Vector3 targetSnapPos = overlappingFridgeShelf.AddAndRearrangeShelf(this);
+        // ❌ REMOVED: The entire overlappingFridgeShelf snapback and grid allocation check block was deleted from here!
 
-            // Instantly updates position coordinates to prevent floating or drops
-            transform.position = targetSnapPos;
-
-            // Recycles the object clean out of the active scene instantly!
-            TrashAndPoolManager.Instance.RecycleToPool(gameObject);
-            return;
-        }
-        // ── 2. IF DRAGGED OUTSIDE OF THE REFRIGERATOR COMPLETELY ──
-        else
+        // Ensure the item is unparented so it falls freely in world coordinates
+        transform.SetParent(null);
+        if (isSlottedInFridge)
         {
-            if (isSlottedInFridge)
-            {
-                isSlottedInFridge = false;
-            }
-            transform.SetParent(null);
+            isSlottedInFridge = false;
         }
 
-        // ── 3. RUN ORIGINAL BLENDER OVERLAP & COUNTER LANDING PHYSICS ──
+        // ── 2. RUN ORIGINAL BLENDER OVERLAP & COUNTER LANDING PHYSICS ──
         Collider2D[] hits = Physics2D.OverlapPointAll(new Vector2(transform.position.x, transform.position.y));
         foreach (Collider2D hit in hits)
         {
@@ -315,6 +302,7 @@ public class IngredientController : MonoBehaviour
             }
         }
 
+        // Run natural falling gravity logic for all positions now!
         ExecuteNormalFloorDrop();
     }
 

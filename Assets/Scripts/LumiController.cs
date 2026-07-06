@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -5,6 +6,9 @@ public class LumiController : MonoBehaviour
 {
     [Header("🤖 Animation Settings")]
     [SerializeField] private string flyParameterName = "isFlying";
+    [SerializeField] private string eatTriggerName = "Eat";
+    [Tooltip("How many seconds the eating animation lasts before returning to normal.")]
+    [SerializeField] private float eatAnimationDuration = 1.5f;
 
     [Header("✨ Drag & Follow Smoothing")]
     [SerializeField] private float followSmoothing = 25f;
@@ -13,10 +17,14 @@ public class LumiController : MonoBehaviour
     [SerializeField] private float gravity = 20f;
     [SerializeField] private float floorYCoord = -3.5f;
 
+    [Header("🔴 Flight Threshold Zone")]
+    [SerializeField] private float redLineYCoord = -0.5f;
+
+    [Header("🍰 Eating Interaction Settings")]
+    [Tooltip("How close an item needs to be to Lumi's center to trigger eating.")]
+    [SerializeField] private float eatingDistanceThreshold = 1.2f;
+
     [Header("🎥 Edge Panning Settings")]
-    [Tooltip("Distance from screen edge in pixels to trigger a scroll (e.g., 100px).")]
-    [SerializeField] private float edgeThresholdPixels = 100f;
-    [Tooltip("How fast the camera moves when pushing the edge.")]
     [SerializeField] private float cameraScrollSpeed = 5f;
 
     // Core Component Cache
@@ -27,6 +35,7 @@ public class LumiController : MonoBehaviour
     // Internal Drag & Physics States
     private bool isBeingDragged = false;
     private bool isFalling = false;
+    private bool isEating = false;
     private Vector3 dragOffset;
     private float verticalVelocity = 0f;
 
@@ -43,18 +52,24 @@ public class LumiController : MonoBehaviour
 
         if (isBeingDragged)
         {
-            // 🌟 NEW FEATURE: Check if Lumi is pushing screen edges to move the camera!
             HandleEdgeScrolling();
         }
 
-        if (isFalling && !isBeingDragged)
+        if (isFalling && !isBeingDragged && !isEating)
         {
             ApplyGravity();
+        }
+
+        if (!isBeingDragged && !isEating)
+        {
+            CheckForFoodNearFace();
         }
     }
 
     private void HandleInputAndDrag()
     {
+        if (isEating) return; // Ignore tracking while eating animation plays
+
         Vector3 mouseWorldPos = GetMouseWorldPosition();
 
         if (InputPressed() && !isBeingDragged)
@@ -77,34 +92,95 @@ public class LumiController : MonoBehaviour
         }
     }
 
+    private void CheckForFoodNearFace()
+    {
+        IngredientController[] ingredients = FindObjectsByType<IngredientController>(FindObjectsSortMode.None);
+
+        foreach (IngredientController item in ingredients)
+        {
+            if (!item.IsBeingDragged)
+            {
+                float distance = Vector2.Distance(transform.position, item.transform.position);
+                if (distance <= eatingDistanceThreshold)
+                {
+                    StartCoroutine(EatItemRoutine(item.gameObject));
+                    break;
+                }
+            }
+        }
+    }
+
+    private IEnumerator EatItemRoutine(GameObject foodObject)
+    {
+        isEating = true;
+        isFalling = false;
+        verticalVelocity = 0f;
+
+        // Extract the clean item name
+        string foodName = foodObject.name.Replace("(Clone)", "").Trim();
+
+        // 1. Recycle food instantly to your pool manager
+        if (TrashAndPoolManager.Instance != null)
+        {
+            TrashAndPoolManager.Instance.RecycleToPool(foodObject);
+        }
+        else
+        {
+            Destroy(foodObject);
+        }
+
+        // 2. 🎬 PLAY THINKING ANIMATION DIRECTLY: Force-plays your custom state
+        if (myAnimator != null)
+        {
+            // Turn off flying parameter so it doesn't fight the thinking loop
+            myAnimator.SetBool(flyParameterName, false);
+
+            // 🌟 Play the exact state name from your image_924ce0.png layout map!
+            myAnimator.Play("LumiThinking");
+        }
+
+        // 3. 💾 PROCESS PERSONALITY STORAGE
+        CharacterPersonality personalityEngine = GetComponent<CharacterPersonality>();
+        if (personalityEngine != null)
+        {
+            personalityEngine.ProcessFedFoodItem(foodName);
+        }
+
+        // Wait here while she stands/floats thinking about her meal
+        yield return new WaitForSeconds(eatAnimationDuration);
+
+        isEating = false;
+
+        // 4. Return to your regular state logic loops
+        if (transform.position.y >= redLineYCoord)
+        {
+            if (myAnimator != null) myAnimator.SetBool(flyParameterName, true);
+        }
+        else
+        {
+            isFalling = true;
+        }
+    }
+
     private void HandleEdgeScrolling()
     {
         if (Pointer.current == null || mainCamera == null) return;
 
-        // 1. Get raw screen position
         Vector2 screenPos = Pointer.current.position.ReadValue();
-
-        // 2. Convert it to a normalized Viewport coordinate (0.0 to 1.0)
         Vector3 viewportPos = mainCamera.ScreenToViewportPoint(new Vector3(screenPos.x, screenPos.y, 0f));
-
         Vector3 cameraPos = mainCamera.transform.position;
 
-        // 🌟 NEW THRESHOLD: 0.1f means "within 10% of the screen edge"
         float edgeThreshold = 0.12f;
 
-        // ── A. PUSHING RIGHT EDGE (Viewport X is close to 1.0) ──
         if (viewportPos.x >= 1.0f - edgeThreshold)
         {
             cameraPos.x += cameraScrollSpeed * Time.deltaTime;
         }
-        // ── B. PUSHING LEFT EDGE (Viewport X is close to 0.0) ──
         else if (viewportPos.x <= edgeThreshold)
         {
             cameraPos.x -= cameraScrollSpeed * Time.deltaTime;
         }
 
-        // ── C. BOUNDARY CLAMP ──
-        // 🌟 CRUCIAL: Make sure these limits (-5f, 5f) match your background limits!
         cameraPos.x = Mathf.Clamp(cameraPos.x, -10f, 28f);
         mainCamera.transform.position = cameraPos;
     }
@@ -117,7 +193,6 @@ public class LumiController : MonoBehaviour
         dragOffset = transform.position - clickPos;
         dragOffset.z = 0f;
 
-        // Tell your regular swipe camera system to freeze so it doesn't shake while moving
         CameraPan.IsHoldingAnyItem = true;
 
         if (myAnimator != null)
@@ -130,7 +205,17 @@ public class LumiController : MonoBehaviour
     {
         isBeingDragged = false;
         CameraPan.IsHoldingAnyItem = false;
-        isFalling = true;
+
+        if (transform.position.y >= redLineYCoord)
+        {
+            isFalling = false;
+            verticalVelocity = 0f;
+            if (myAnimator != null) myAnimator.SetBool(flyParameterName, true);
+        }
+        else
+        {
+            isFalling = true;
+        }
     }
 
     private void ApplyGravity()

@@ -51,14 +51,14 @@ TagManager:
   - name: Containers_Back
     uniqueID: 3172875637
     locked: 0
-  - name: Ingredients
-    uniqueID: 696507685
+  - name: Containers_Front
+    uniqueID: 1201577529
     locked: 0
   - name: Characters
     uniqueID: 2181639685
     locked: 0
-  - name: Containers_Front
-    uniqueID: 1201577529
+  - name: Ingredients
+    uniqueID: 696507685
     locked: 0
   - name: Tools
     uniqueID: 1847440575

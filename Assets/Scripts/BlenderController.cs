@@ -24,6 +24,10 @@ public class BlenderController : MonoBehaviour
     public Sprite pineappleInJarSprite;
     public Sprite watermelonInJarSprite;
 
+    [Header("🥛 Custom Liquid Data References")]
+    [Tooltip("Drag your raw Data_Milk ScriptableObject into this slot via the Inspector!")]
+    public IngredientData milkIngredientData;
+
     private List<IngredientData> ingredientsInBlender = new List<IngredientData>();
     private RecipeData lastSuccessfulRecipe;
     private Collider2D myCollider;
@@ -41,10 +45,8 @@ public class BlenderController : MonoBehaviour
             Vector3 worldPos = GetWorldPos();
             RaycastHit2D hit = Physics2D.Raycast(new Vector2(worldPos.x, worldPos.y), Vector2.zero);
 
-            // If the player clicked directly on the blender, start the recipe!
             if (hit.collider != null && hit.collider == myCollider)
             {
-                // Only blend if there are actually ingredients inside
                 if (ingredientsInBlender.Count > 0)
                 {
                     OnBlendButtonPressed();
@@ -74,7 +76,15 @@ public class BlenderController : MonoBehaviour
             yield return null;
         }
 
-        AddIngredient(ingredient.ingredientData);
+        // Safe Fallback check: If it was a milk bottle, don't pass null data
+        if (ingredient.ingredientData != null)
+        {
+            AddIngredient(ingredient.ingredientData);
+        }
+        else if (ingredient.gameObject.name.ToLower().Contains("milk") && milkIngredientData != null)
+        {
+            AddIngredient(milkIngredientData);
+        }
 
         if (ingredient.gameObject.name.Contains("(Clone)"))
         {
@@ -88,8 +98,23 @@ public class BlenderController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 🚀 LIQUID INTERACTION HOOK: Called automatically by MilkPourer when countdown ends!
+    /// </summary>
+    public void AddLiquidIngredientDirect(string liquidName)
+    {
+        if (liquidName.ToLower() == "milk" && milkIngredientData != null)
+        {
+            if (!ingredientsInBlender.Contains(milkIngredientData))
+            {
+                AddIngredient(milkIngredientData);
+            }
+        }
+    }
+
     public void AddIngredient(IngredientData data)
     {
+        if (data == null) return;
         ingredientsInBlender.Add(data);
         Debug.Log("Added to Blender: " + data.ingredientName + " (Total: " + ingredientsInBlender.Count + ")");
         UpdateBlenderVisualProgress();
@@ -105,7 +130,7 @@ public class BlenderController : MonoBehaviour
 
         string check = "";
         foreach (var item in ingredientsInBlender)
-            check += item.ingredientName.ToLower() + " ";
+            if (item != null) check += item.ingredientName.ToLower() + " ";
 
         if ((check.Contains("chocolate") || check.Contains("choclate")) && check.Contains("milk"))
             blenderSpriteRenderer.sprite = chocolateAndMilkInJarSprite;
@@ -140,7 +165,13 @@ public class BlenderController : MonoBehaviour
     private void DisplayFinalDrink()
     {
         ingredientsInBlender.Clear();
-        blenderSpriteRenderer.sprite = lastSuccessfulRecipe.resultSprite;
+        if (lastSuccessfulRecipe != null) blenderSpriteRenderer.sprite = lastSuccessfulRecipe.resultSprite;
+
+        // 🌟 NEW INTERACTION HOOK: Turn on the drag handler script automatically because the drink is ready!
+        if (TryGetComponent<BlenderDragHandler>(out var dragHandler))
+        {
+            dragHandler.EnableBlenderDraggability(true);
+        }
     }
 
     private RecipeData ValidateRecipe()
@@ -167,8 +198,6 @@ public class BlenderController : MonoBehaviour
         ingredientsInBlender.Clear();
         if (blenderSpriteRenderer != null) blenderSpriteRenderer.sprite = emptyBlenderSprite;
     }
-
-    // ── STABILIZED INPUT HELPERS FOR BOTH EDITOR & MOBILE ──
 
     private Vector3 GetWorldPos()
     {

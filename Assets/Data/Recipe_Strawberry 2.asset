@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b1fa67b9f681c6742b75af90e465d3ab, type: 3}
-  m_Name: Recipe_Pinapple
+  m_Name: Recipe_Strawberry 2
   m_EditorClassIdentifier: 
-  resultName: Pineapple Juice
-  resultSprite: {fileID: 21300000, guid: 36d03dbf81573aa419241344b506c3c1, type: 3}
+  resultName: Strawberry Shake
+  resultSprite: {fileID: -4877133320403310851, guid: a1540efb791fde646a74352eab66be33, type: 3}
   requiredIngredients:
-  - {fileID: 11400000, guid: 2618f1eedb45511419ace2523d0cfe00, type: 2}
+  - {fileID: 11400000, guid: f3211a7122ab8d74a866bf4ce377c65b, type: 2}
   - {fileID: 11400000, guid: e3b55bbe3954a784b97add91ec1336b8, type: 2}

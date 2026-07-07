@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1fa67b9f681c6742b75af90e465d3ab, type: 3}
+  m_Name: Recipe_Apple
+  m_EditorClassIdentifier: 
+  resultName: Apple Shake
+  resultSprite: {fileID: -900877779566623056, guid: 8b4a8a57a28fc4d469d78b18fd82c16f, type: 3}
+  requiredIngredients:
+  - {fileID: 11400000, guid: bdc0fe6b4d3a7ac4ca095f3c554fa348, type: 2}
+  - {fileID: 11400000, guid: e3b55bbe3954a784b97add91ec1336b8, type: 2}

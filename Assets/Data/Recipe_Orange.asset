@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b1fa67b9f681c6742b75af90e465d3ab, type: 3}
-  m_Name: Recipe_Watermelon
+  m_Name: Recipe_Orange
   m_EditorClassIdentifier: 
-  resultName: Watermelon Juice
-  resultSprite: {fileID: 21300000, guid: a6458afa84a7e944187b22cef9c3a5ef, type: 3}
+  resultName: Orange Shake
+  resultSprite: {fileID: 564980051357730354, guid: 170a983923f3c35499a040e9681a6236, type: 3}
   requiredIngredients:
-  - {fileID: 11400000, guid: 622eca23c993d664bae3272253dc7a46, type: 2}
+  - {fileID: 11400000, guid: 9c0321f40240c9c41b491887225afc72, type: 2}
   - {fileID: 11400000, guid: e3b55bbe3954a784b97add91ec1336b8, type: 2}

@@ -10,9 +10,16 @@ public class MilkPourer : MonoBehaviour
     [SerializeField] private float nozzleHeightOffset = 1.2f;
     [SerializeField] private float pourTiltAngleZ = -90f;
 
+    [Header("⏰ Countdown Registration Settings")]
+    [SerializeField] private float targetedPourDuration = 3f;
+
     private bool isNearTarget = false;
     private Collider2D activeTargetCollider;
     private Transform parentRoot;
+
+    // Running State Clocks
+    private float progressivePourTimer = 0f;
+    private bool calculationCompleted = false;
 
     void Start()
     {
@@ -32,17 +39,14 @@ public class MilkPourer : MonoBehaviour
         float currentY = trackTarget.position.y;
         float distanceX = Mathf.Abs(currentX - targetCollider.bounds.center.x);
 
-        // If within range of the blender/glass mouth
         if (distanceX <= activationDistance && currentY >= targetRimY - 2.5f)
         {
             float magnetFactor = Mathf.InverseLerp(activationDistance, 0.4f, distanceX);
             magnetFactor = Mathf.Clamp01(magnetFactor);
 
-            // 1. TILT CHILD ARTWORK ONLY
             float finalAngle = Mathf.Lerp(0f, pourTiltAngleZ, magnetFactor);
             transform.localRotation = Quaternion.Euler(0f, 0f, finalAngle);
 
-            // 2. SNAP THE PARENT ROOT TO THE RIM HEIGHT
             float lockedHeightY = targetRimY + nozzleHeightOffset;
             float finalY = Mathf.Lerp(currentY, lockedHeightY, magnetFactor);
 
@@ -55,12 +59,36 @@ public class MilkPourer : MonoBehaviour
                 transform.position = new Vector3(currentX, finalY, transform.position.z);
             }
 
-            // 3. TRIGGER STREAM WHEN 90 DEGREE TILT COMPLETED
+            // ── Active Streaming Handler ──
             if (magnetFactor >= 0.8f)
             {
-                if (pourStreamParticles != null && !pourStreamParticles.isPlaying)
+                // 🌟 FIX: Only allow the stream to play if the calculation hasn't finished yet!
+                if (pourStreamParticles != null && !pourStreamParticles.isPlaying && !calculationCompleted)
                 {
                     pourStreamParticles.Play();
+                }
+
+                // ── Countdown Timing Simulation ──
+                if (!calculationCompleted)
+                {
+                    progressivePourTimer += Time.deltaTime;
+
+                    if (progressivePourTimer >= targetedPourDuration)
+                    {
+                        calculationCompleted = true;
+
+                        // 🌟 PRINT TO CONSOLE
+                        Debug.Log("Milk is added to blender");
+
+                        // Stop the particle stream instantly
+                        StopPourStream();
+
+                        // Register contents
+                        if (targetCollider.TryGetComponent<BlenderController>(out var blender))
+                        {
+                            blender.AddLiquidIngredientDirect("Milk");
+                        }
+                    }
                 }
             }
             else
@@ -70,19 +98,16 @@ public class MilkPourer : MonoBehaviour
         }
         else
         {
-            // Exit condition if inside overlap block but out of magnet ranges
             ResetPourState();
         }
     }
 
-    /// <summary>
-    /// CRITICAL FIX: Forces the container artwork back upright and completely shuts down the particle emission loop.
-    /// </summary>
     public void ResetPourState()
     {
         StopPourStream();
         transform.localRotation = Quaternion.identity;
         isNearTarget = false;
+        progressivePourTimer = 0f; // Safely wipe progress if pulled away early
     }
 
     public void HandleReleaseOverBlender()
@@ -104,6 +129,7 @@ public class MilkPourer : MonoBehaviour
         }
 
         activeTargetCollider = null;
+        calculationCompleted = false;
     }
 
     private void StopPourStream()

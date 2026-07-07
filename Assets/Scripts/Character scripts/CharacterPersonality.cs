@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using TMPro; // 🌟 Need this namespace to control TextMeshPro components!
 
 public class CharacterPersonality : MonoBehaviour
 {
@@ -15,6 +16,10 @@ public class CharacterPersonality : MonoBehaviour
     [SerializeField] private string thinkTriggerName = "LumiThink";
     [SerializeField] private string fallbackIdleBoolName = "isFlying";
 
+    [Header("📺 UI Display Configuration")]
+    [Tooltip("Drag your Screen Star TextMeshPro component here via the Inspector!")]
+    [SerializeField] private TextMeshProUGUI globalStarCounterText;
+
     // Internal state cache variables
     private Animator myAnimator;
     private int lifetimeStars = 0;
@@ -26,6 +31,9 @@ public class CharacterPersonality : MonoBehaviour
         // 💾 LOAD ON STARTUP: Pull absolute lifetime star count from permanent local disk storage
         lifetimeStars = PlayerPrefs.GetInt(characterStarSaveKey, 0);
         Debug.Log($"Lumi initialized! Absolute Lifetime Stars loaded: {lifetimeStars}");
+
+        // 🌟 Initial UI setup so the player see their correct saved stars immediately when the scene opens
+        UpdateStarDisplayUI();
     }
 
     /// <summary>
@@ -58,7 +66,6 @@ public class CharacterPersonality : MonoBehaviour
 
             case FoodReactionTier.DislikesIt:
                 starsEarned = 0;
-                // Add a unique dislike state trigger later if your team makes one!
                 Debug.Log($"🤢 Lumi DISLIKED the {foodItemName}!");
                 break;
         }
@@ -71,11 +78,10 @@ public class CharacterPersonality : MonoBehaviour
 
     private FoodReactionTier DetermineReactionTier(string foodName)
     {
-        // Force strings to lowercase to ensure spelling mistakes don't break lookups
         string itemKey = foodName.ToLower().Trim();
 
         // 1. LOVES IT CHECK
-        if (itemKey == "rainbow smoothie" || itemKey == "strawberry shake")
+        if (itemKey == "rainbow smoothie" || itemKey == "strawberry shake" || itemKey.Contains("shake") || itemKey.Contains("smoothie"))
         {
             return FoodReactionTier.LovesIt;
         }
@@ -86,10 +92,10 @@ public class CharacterPersonality : MonoBehaviour
             return FoodReactionTier.DislikesIt;
         }
 
-        // 3. LIKES IT CHECK (Fruits, Smoothies, generic health foods)
+        // 3. LIKES IT CHECK (Fruits, generic health foods)
         if (itemKey == "apple" || itemKey == "banana" || itemKey == "kiwi" ||
             itemKey == "orange" || itemKey == "strawberry" || itemKey == "blueberry" ||
-            itemKey == "grapes" || itemKey == "mango" || itemKey.Contains("smoothie"))
+            itemKey == "grapes" || itemKey == "mango")
         {
             return FoodReactionTier.LikesIt;
         }
@@ -102,10 +108,7 @@ public class CharacterPersonality : MonoBehaviour
     {
         if (myAnimator == null) return;
 
-        // Force idle fly state parameters off so they don't block the priority overlays
         myAnimator.SetBool(fallbackIdleBoolName, false);
-
-        // Fire the specific parameter trigger instantly
         myAnimator.SetTrigger(targetTrigger);
     }
 
@@ -113,10 +116,24 @@ public class CharacterPersonality : MonoBehaviour
     {
         lifetimeStars += amount;
 
-        // 💾 SAVE TO DISK INSTANTLY: Commit the new integer value securely to PlayerPrefs local cache
+        // 💾 SAVE TO DISK INSTANTLY
         PlayerPrefs.SetInt(characterStarSaveKey, lifetimeStars);
-        PlayerPrefs.Save(); // Force write to persistent app hardware configurations
+        PlayerPrefs.Save();
 
         Debug.Log($"⭐ Stars Added: +{amount} | Absolute New Total Balance: {lifetimeStars}");
+
+        // 🌟 Refresh the display text mesh values immediately!
+        UpdateStarDisplayUI();
+    }
+
+    /// <summary>
+    /// 🌟 Updates the text rendering on screen to cleanly represent the data value
+    /// </summary>
+    private void UpdateStarDisplayUI()
+    {
+        if (globalStarCounterText != null)
+        {
+            globalStarCounterText.text = "⭐ " + lifetimeStars.ToString();
+        }
     }
 }

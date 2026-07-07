@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: efb96ce48ec33ed48bb3d289e80e737b, type: 3}
-  m_Name: Data_Strawberry
+  m_Name: Data_Apple
   m_EditorClassIdentifier: 
-  ingredientName: Strawberry
-  icon: {fileID: 1669490993913548592, guid: fdad712971fed7940b679b01642ae231, type: 3}
+  ingredientName: Apple
+  icon: {fileID: -5060255366449352598, guid: 41f16a63246bba84092bbd36a03f3fac, type: 3}

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: efb96ce48ec33ed48bb3d289e80e737b, type: 3}
-  m_Name: Data_Strawberry
+  m_Name: Data_Mango
   m_EditorClassIdentifier: 
-  ingredientName: Strawberry
-  icon: {fileID: 1669490993913548592, guid: fdad712971fed7940b679b01642ae231, type: 3}
+  ingredientName: Mango
+  icon: {fileID: 8617278338890539712, guid: d4b3b02386484954abcaf34d11cc3747, type: 3}

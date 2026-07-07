@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Data_milk
   m_EditorClassIdentifier: 
   ingredientName: milk
-  icon: {fileID: -5110731548806032159, guid: fce922ae12173d54da8af05087c6db32, type: 3}
+  icon: {fileID: -5110731548806032159, guid: 1e0e7229a5c71c846b01a36ef15f1c5b, type: 3}

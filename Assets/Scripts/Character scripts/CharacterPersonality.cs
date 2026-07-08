@@ -14,11 +14,17 @@ public class CharacterPersonality : MonoBehaviour
     [SerializeField] private string loveTriggerName = "LumiLove";
     [SerializeField] private string likeTriggerName = "LumiLike";
     [SerializeField] private string thinkTriggerName = "LumiThink";
+    [SerializeField] private string dislikeTriggerName = "LumiDislike";
     [SerializeField] private string fallbackIdleBoolName = "isFlying";
 
     [Header("📺 UI Display Configuration")]
     [Tooltip("Drag your Screen Star TextMeshPro component here via the Inspector!")]
     [SerializeField] private TextMeshProUGUI globalStarCounterText;
+
+    [Header("⭐ Dynamic Star Popup Settings")]
+    [SerializeField] private GameObject starUiPrefab;       // Drag your UI_Star_Prefab here
+    [SerializeField] private Transform starPopupContainer; // Drag your Star_Popup_Container here
+    [SerializeField] private float popupDisplayDuration = 2.0f;
 
     // Internal state cache variables
     private Animator myAnimator;
@@ -66,6 +72,7 @@ public class CharacterPersonality : MonoBehaviour
 
             case FoodReactionTier.DislikesIt:
                 starsEarned = 0;
+                PlayReactionAnimation(dislikeTriggerName);
                 Debug.Log($"🤢 Lumi DISLIKED the {foodItemName}!");
                 break;
         }
@@ -73,9 +80,41 @@ public class CharacterPersonality : MonoBehaviour
         if (starsEarned > 0)
         {
             AddAndSaveStars(starsEarned);
+            StartCoroutine(SpawnStarPopupRoutine(starsEarned));
         }
     }
+    private IEnumerator SpawnStarPopupRoutine(int count)
+    {
+        // 1. Clear out any old stars just in case
+        foreach (Transform child in starPopupContainer)
+        {
+            Destroy(child.gameObject);
+        }
 
+        // 2. Spawn the exact amount side-by-side inside the layout group container
+        for (int i = 0; i < count; i++)
+        {
+            GameObject spawnedStar = Instantiate(starUiPrefab, starPopupContainer);
+
+            // 🌟 FORCE ANIMATION TO PLAY ON SPAWN
+            Animator starAnim = spawnedStar.GetComponent<Animator>();
+            if (starAnim != null)
+            {
+                // Force it to play your exact state name from the Animator grid!
+                // Make sure "Star_Animation" matches your state box name exactly.
+                starAnim.Play("Star_Animation", 0, 0f);
+            }
+        }
+
+        // 3. Keep them alive on screen for a moment for the player to see
+        yield return new WaitForSeconds(popupDisplayDuration);
+
+        // 4. Clean up and destroy them smoothly
+        foreach (Transform child in starPopupContainer)
+        {
+            Destroy(child.gameObject);
+        }
+    }
     private FoodReactionTier DetermineReactionTier(string foodName)
     {
         string itemKey = foodName.ToLower().Trim();

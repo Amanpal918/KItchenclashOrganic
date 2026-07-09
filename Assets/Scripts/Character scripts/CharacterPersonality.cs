@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-using TMPro; // 🌟 Need this namespace to control TextMeshPro components!
+using TMPro;
 
 public class CharacterPersonality : MonoBehaviour
 {
@@ -38,8 +38,35 @@ public class CharacterPersonality : MonoBehaviour
         lifetimeStars = PlayerPrefs.GetInt(characterStarSaveKey, 0);
         Debug.Log($"Lumi initialized! Absolute Lifetime Stars loaded: {lifetimeStars}");
 
-        // 🌟 Initial UI setup so the player see their correct saved stars immediately when the scene opens
+        // 🌟 Initial UI setup so the player sees their correct saved stars immediately when the scene opens
         UpdateStarDisplayUI();
+    }
+
+    /// <summary>
+    /// 🚀 NEW EXPLICIT FEATURE ENTRY POINT: Call this method when dropping food onto Lumi's mouth!
+    /// Handles calculations AND recycles the object back into the optimization pool safely.
+    /// </summary>
+    public void FeedLumiFoodObject(GameObject foodObject)
+    {
+        if (foodObject == null) return;
+
+        Debug.Log($"🍽️ [Lumi Intake] Processing ingestion for item asset: '{foodObject.name}'");
+
+        // 1. Process all existing score tracking formulas and spawn animations using the object's name
+        ProcessFedFoodItem(foodObject.name);
+
+        // 2. Performance optimization: Recycle the physical item back to pool storage instantly instead of running Destroy()
+        if (TrashAndPoolManager.Instance != null)
+        {
+            TrashAndPoolManager.Instance.RecycleToPool(foodObject);
+            Debug.Log($"✅ [Pool Recycle Intercept] Sent '{foodObject.name}' to object pool cache smoothly.");
+        }
+        else
+        {
+            // Fallback safety guard if the Pool Manager isn't active or loaded in the scene
+            Debug.LogWarning("⚠️ [Pool Warning] TrashAndPoolManager.Instance is missing from the scene! Falling back to raw destroy.");
+            Destroy(foodObject);
+        }
     }
 
     /// <summary>
@@ -79,10 +106,12 @@ public class CharacterPersonality : MonoBehaviour
 
         if (starsEarned > 0)
         {
+            // 🌟 Keep your math functions synchronized!
             AddAndSaveStars(starsEarned);
             StartCoroutine(SpawnStarPopupRoutine(starsEarned));
         }
     }
+
     private IEnumerator SpawnStarPopupRoutine(int count)
     {
         // 1. Clear out any old stars just in case
@@ -100,8 +129,6 @@ public class CharacterPersonality : MonoBehaviour
             Animator starAnim = spawnedStar.GetComponent<Animator>();
             if (starAnim != null)
             {
-                // Force it to play your exact state name from the Animator grid!
-                // Make sure "Star_Animation" matches your state box name exactly.
                 starAnim.Play("Star_Animation", 0, 0f);
             }
         }
@@ -115,9 +142,11 @@ public class CharacterPersonality : MonoBehaviour
             Destroy(child.gameObject);
         }
     }
+
     private FoodReactionTier DetermineReactionTier(string foodName)
     {
-        string itemKey = foodName.ToLower().Trim();
+        // Clean up text extensions to support both raw items and cloned instances safely
+        string itemKey = foodName.ToLower().Replace("(clone)", "").Trim();
 
         // 1. LOVES IT CHECK
         if (itemKey == "rainbow smoothie" || itemKey == "strawberry shake" || itemKey.Contains("shake") || itemKey.Contains("smoothie"))
@@ -165,9 +194,6 @@ public class CharacterPersonality : MonoBehaviour
         UpdateStarDisplayUI();
     }
 
-    /// <summary>
-    /// 🌟 Updates the text rendering on screen to cleanly represent the data value
-    /// </summary>
     private void UpdateStarDisplayUI()
     {
         if (globalStarCounterText != null)

@@ -29,25 +29,27 @@ public class TrashAndPoolManager : MonoBehaviour
         }
 
         bool isOver = trashCanCollider.OverlapPoint(worldPos);
-        Debug.Log($"🎯 [Trash Check] Checking position {worldPos}. Overlap detected? {isOver}");
         return isOver;
     }
+
     /// <summary>
     /// Pulls a recycled item from the pool, or instantiates a new one if empty.
     /// </summary>
     public GameObject GetPooledIngredient(GameObject prefab, Vector3 position, Quaternion rotation)
     {
-        string poolKey = prefab.name.Replace("(Clone)", "");
+        if (prefab == null) return null;
 
-        // Initialize pool list if it doesn't exist yet
+        string poolKey = prefab.name.Replace("(Clone)", "").Trim();
+
         if (!poolDictionary.ContainsKey(poolKey))
         {
             poolDictionary[poolKey] = new List<GameObject>();
         }
 
         // Search for an inactive object in the pool
-        foreach (GameObject obj in poolDictionary[poolKey])
+        for (int i = 0; i < poolDictionary[poolKey].Count; i++)
         {
+            GameObject obj = poolDictionary[poolKey][i];
             if (obj != null && !obj.activeInHierarchy)
             {
                 obj.transform.position = position;
@@ -57,30 +59,31 @@ public class TrashAndPoolManager : MonoBehaviour
             }
         }
 
-        // If no inactive object was found, create a new one and cache it
         GameObject newObj = Instantiate(prefab, position, rotation);
-        newObj.name = poolKey; // Keep naming clean for keys
+        newObj.name = poolKey;
         poolDictionary[poolKey].Add(newObj);
         return newObj;
     }
 
     /// <summary>
-    /// Recycles an item back into the pool by deactivating it.
+    /// Updated: Handles item trashing. Instantly DESTROYS clone objects to clean scene structure.
     /// </summary>
     public void RecycleToPool(GameObject obj)
     {
-        // 🔍 DEBUG PRINT: Find out exactly what name key the item is trying to use to register
-        string poolKey = obj.name.Replace("(Clone)", "");
-        Debug.Log($"🗑️ [Recycle Request] Attempting to trash gameobject named: '{obj.name}' using Key: '{poolKey}'");
+        if (obj == null) return;
 
-        var milkPourer = obj.GetComponentInChildren<MilkPourer>();
-        var waterPourer = obj.GetComponentInChildren<WaterPourer>();
-        if (milkPourer != null) milkPourer.ResetPourState();
-        if (waterPourer != null) waterPourer.ResetPourState();
+        // 🌟 CHECK IF IT IS A CLONE OR TARGET OBJECT
+        // If the item name contains "clone" or if you want ALL items put in the trash can to die instantly:
+        Debug.Log($"🗑️ [Trash Collector] Actively destroying trashed object: '{obj.name}' from memory.");
 
-        obj.transform.SetParent(null);
-        obj.SetActive(false);
+        // Clean up tracking dictionary references before killing the object to prevent null exceptions
+        string poolKey = obj.name.Replace("(Clone)", "").Trim();
+        if (poolDictionary.ContainsKey(poolKey) && poolDictionary[poolKey].Contains(obj))
+        {
+            poolDictionary[poolKey].Remove(obj);
+        }
 
-        Debug.Log($"✅ [Recycle Success] '{obj.name}' successfully deactivated and stored in pool under key '{poolKey}'");
+        // 🚀 CRITICAL CHANGE: Completely vaporize the object from the scene framework!
+        Destroy(obj);
     }
 }

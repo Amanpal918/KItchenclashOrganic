@@ -7,16 +7,23 @@ public class GroceryBagClickHandler : MonoBehaviour
     void Start()
     {
         // Find the main manager component in the kitchen scene
-        manager = FindFirstObjectByType<HootCutsceneManager>();
+        manager = FindFirstObjectByType<HootCutsceneManager>(); //
     }
 
-    // 🌟 Unity automatically runs this whenever this object's collider is clicked!
-    void OnMouseDown()
+    // 🌟 This works independently of the Fridge script's raycasting loop blocks!
+    void OnMouseDown() //[cite: 1]
     {
-        if (manager != null && manager.isBagClickable)
+        if (manager == null) return;
+
+        // Force a direct check on the manager state layout
+        if (manager.isBagClickable) //[cite: 1]
         {
-            Debug.Log("🛍️ [Input System Override] Direct Box Collider touch detected on the grocery bag asset!");
-            manager.OnBagClicked();
+            Debug.Log("🛍️ [Bag Click] Click passed directly to manager successfully!");
+            manager.OnBagClicked(); //[cite: 1]
+        }
+        else
+        {
+            Debug.LogWarning("⚠️ [Bag Click] Click intercepted, but 'isBagClickable' is currently FALSE on HootCutsceneManager!");
         }
     }
 }

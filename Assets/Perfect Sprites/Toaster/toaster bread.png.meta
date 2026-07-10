@@ -26,6 +26,18 @@ TextureImporter:
   - first:
       213: 3097599403641846037
     second: toaster bread_7
+  - first:
+      213: 3178925484214717395
+    second: toaster bread_8
+  - first:
+      213: 2212106084416477532
+    second: toaster bread_9
+  - first:
+      213: -6830408256955022612
+    second: toaster bread_10
+  - first:
+      213: -7219742893032923228
+    second: toaster bread_11
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -152,8 +164,8 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 969
-        height: 830
+        width: 1063
+        height: 948
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -172,8 +184,8 @@ TextureImporter:
       name: toaster bread_1
       rect:
         serializedVersion: 2
-        x: 72
-        y: 429
+        x: 89
+        y: 89
         width: 6
         height: 6
       alignment: 0
@@ -194,10 +206,10 @@ TextureImporter:
       name: toaster bread_2
       rect:
         serializedVersion: 2
-        x: 72
-        y: 395
-        width: 6
-        height: 6
+        x: 1045
+        y: 91
+        width: 7
+        height: 7
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -216,10 +228,10 @@ TextureImporter:
       name: toaster bread_3
       rect:
         serializedVersion: 2
-        x: 73
-        y: 343
+        x: 1054
+        y: 87
         width: 9
-        height: 7
+        height: 8
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -238,10 +250,10 @@ TextureImporter:
       name: toaster bread_4
       rect:
         serializedVersion: 2
-        x: 73
-        y: 225
-        width: 7
-        height: 7
+        x: 1047
+        y: 72
+        width: 16
+        height: 11
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -260,10 +272,10 @@ TextureImporter:
       name: toaster bread_5
       rect:
         serializedVersion: 2
-        x: 963
-        y: 139
-        width: 6
-        height: 8
+        x: 151
+        y: 24
+        width: 7
+        height: 6
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -282,10 +294,10 @@ TextureImporter:
       name: toaster bread_6
       rect:
         serializedVersion: 2
-        x: 959
-        y: 104
-        width: 10
-        height: 11
+        x: 764
+        y: 23
+        width: 6
+        height: 6
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -304,10 +316,10 @@ TextureImporter:
       name: toaster bread_7
       rect:
         serializedVersion: 2
-        x: 962
-        y: 87
+        x: 801
+        y: 28
         width: 6
-        height: 6
+        height: 7
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -318,6 +330,94 @@ TextureImporter:
       bones: []
       spriteID: 519b88eee32ecfa20800000000000000
       internalID: 3097599403641846037
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toaster bread_8
+      rect:
+        serializedVersion: 2
+        x: 809
+        y: 28
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3db0e0e92efcd1c20800000000000000
+      internalID: 3178925484214717395
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toaster bread_9
+      rect:
+        serializedVersion: 2
+        x: 879
+        y: 26
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c59df1773caf2be10800000000000000
+      internalID: 2212106084416477532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toaster bread_10
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 15
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce20d4d11e38531a0800000000000000
+      internalID: -6830408256955022612
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: toaster bread_11
+      rect:
+        serializedVersion: 2
+        x: 1017
+        y: 17
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4af1f1337125ecb90800000000000000
+      internalID: -7219742893032923228
       vertices: []
       indices: 
       edges: []
@@ -338,12 +438,16 @@ TextureImporter:
     nameFileIdTable:
       toaster bread_0: 8404945129484420327
       toaster bread_1: 5282019401343126435
+      toaster bread_10: -6830408256955022612
+      toaster bread_11: -7219742893032923228
       toaster bread_2: 7361143440598673494
       toaster bread_3: 5321714598800100062
       toaster bread_4: 7839808451277326603
       toaster bread_5: 2755702869305280658
       toaster bread_6: -7627660699615361733
       toaster bread_7: 3097599403641846037
+      toaster bread_8: 3178925484214717395
+      toaster bread_9: 2212106084416477532
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

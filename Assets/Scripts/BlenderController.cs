@@ -32,9 +32,17 @@ public class BlenderController : MonoBehaviour
     private RecipeData lastSuccessfulRecipe;
     private Collider2D myCollider;
 
+    // 🌟 PROTECTED LAYOUT SYSTEM
+    private Vector3 lockedLocalScale;
+    private Transform lockedParentTransform;
+
     void Awake()
     {
         myCollider = GetComponent<Collider2D>();
+
+        // 🌟 Cache the perfect layout scale and structure parameters on startup!
+        lockedLocalScale = transform.localScale;
+        lockedParentTransform = transform.parent;
     }
 
     void Update()
@@ -76,7 +84,6 @@ public class BlenderController : MonoBehaviour
             yield return null;
         }
 
-        // Safe Fallback check: If it was a milk bottle, don't pass null data
         if (ingredient.ingredientData != null)
         {
             AddIngredient(ingredient.ingredientData);
@@ -94,13 +101,19 @@ public class BlenderController : MonoBehaviour
         {
             ingredient.enabled = true;
             ingredient.transform.position += new Vector3(-1.5f, -0.5f, 0f);
+
+            // 🌟 FORCE LOCK BEFORE THE CALL: Keep the blender parented and correctly scaled
+            transform.SetParent(lockedParentTransform);
+            transform.localScale = lockedLocalScale;
+
             ingredient.StopDrag();
+
+            // 🌟 RE-LOCK AFTER THE CALL: Fixes any external unparenting leaks instantly!
+            transform.SetParent(lockedParentTransform);
+            transform.localScale = lockedLocalScale;
         }
     }
 
-    /// <summary>
-    /// 🚀 LIQUID INTERACTION HOOK: Called automatically by MilkPourer when countdown ends!
-    /// </summary>
     public void AddLiquidIngredientDirect(string liquidName)
     {
         if (liquidName.ToLower() == "milk" && milkIngredientData != null)
@@ -167,7 +180,6 @@ public class BlenderController : MonoBehaviour
         ingredientsInBlender.Clear();
         if (lastSuccessfulRecipe != null) blenderSpriteRenderer.sprite = lastSuccessfulRecipe.resultSprite;
 
-        // 🌟 NEW INTERACTION HOOK: Turn on the drag handler script automatically because the drink is ready!
         if (TryGetComponent<BlenderDragHandler>(out var dragHandler))
         {
             dragHandler.EnableBlenderDraggability(true);

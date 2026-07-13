@@ -8,7 +8,11 @@ public class BlenderDragHandler : MonoBehaviour
 
     [Header("🍂 Gravity & Floor Settings")]
     [SerializeField] private float gravity = 25f;
-    private float counterFloorY; // Captured dynamically on awake to perfectly match initial placement
+    private float counterFloorY;
+
+    [Header("⭐ Today's Task: Feedback Stars")]
+    [SerializeField] private ParticleSystem starsParticleSystem;
+    [SerializeField] private Vector3 starsOffset = new Vector3(0f, 2f, 0f); // Adjust to position perfectly over Lumi's head
 
     // Core Component Cache
     private BlenderController blenderController;
@@ -29,15 +33,12 @@ public class BlenderDragHandler : MonoBehaviour
         myCollider = GetComponent<Collider2D>();
         mainCamera = Camera.main;
 
-        // Automatically pin the countertop target height based on where you place it in your scene layout
         initialStartingPosition = transform.position;
         counterFloorY = transform.position.y;
-
     }
 
     void Update()
     {
-        // 🌟 RULE 1: Only monitor drag logic if a shake has been successfully prepared!
         if (!canBePickedUp) return;
 
         HandleInputAndDrag();
@@ -63,13 +64,12 @@ public class BlenderDragHandler : MonoBehaviour
                 dragOffset = transform.position - mouseWorldPos;
                 dragOffset.z = 0f;
 
-                // Stop the camera from sliding around while carrying the shake drink
                 CameraPan.IsHoldingAnyItem = true;
-                // 🌟 SORTING LAYER FIX: Force the blender in front of Lumi while carrying it!
+
                 if (TryGetComponent<SpriteRenderer>(out var sr))
                 {
-                    sr.sortingLayerName = "UI_WorldSpace"; // Or "Ingredients"
-                    sr.sortingOrder = 100; // High order guarantees it sits on top of Lumi's layer (15)
+                    sr.sortingLayerName = "UI_WorldSpace";
+                    sr.sortingOrder = 100;
                 }
             }
         }
@@ -89,18 +89,18 @@ public class BlenderDragHandler : MonoBehaviour
 
             if (TryGetComponent<SpriteRenderer>(out var sr))
             {
-                sr.sortingLayerName = "Containers_Back"; // Adjust this to match your normal kitchen counter layer
+                sr.sortingLayerName = "Containers_Back";
                 sr.sortingOrder = 5;
             }
-            // Check if dropped near Lumi's mouth before executing regular gravity drop
+
+            // Check if dropped near Lumi's mouth
             if (CheckIfNearLumiFace())
             {
-                // Lumi consumed it! Empty the jar and snap it back home instantly
+                // Instantly clear juice, trigger stars, and snap back home!
                 ResetBlenderBackToCounter();
             }
             else
             {
-                // Missed Lumi: let the gravity system drop it back to the kitchen counter surface safely
                 isFallingToCounter = true;
             }
         }
@@ -111,10 +111,19 @@ public class BlenderDragHandler : MonoBehaviour
         LumiController lumi = FindFirstObjectByType<LumiController>();
         if (lumi != null)
         {
-            float distanceToFace = Vector2.Distance(transform.position, lumi.transform.position);
-            if (distanceToFace <= 1.5f)
+            // Fallback World Distance check combined with Pixel Check for 100% accuracy
+            float worldDistance = Vector3.Distance(transform.position, lumi.transform.position);
+
+            Vector2 mouseScreenPos = Vector2.zero;
+            if (Pointer.current != null) mouseScreenPos = Pointer.current.position.ReadValue();
+            Vector2 lumiScreenPos = mainCamera.WorldToScreenPoint(lumi.transform.position);
+            float distanceInPixels = Vector2.Distance(mouseScreenPos, lumiScreenPos);
+
+            Debug.Log($"🎯 [Distance Check] World: {worldDistance} | Pixels: {distanceInPixels}");
+
+            // Trigger if close either in World Space or Screen Pixel Space
+            if (distanceInPixels <= 250f || worldDistance <= 3.5f)
             {
-                // 🎬 Play her cute thinking loop sequence
                 Animator lumiAnimator = lumi.GetComponent<Animator>();
                 if (lumiAnimator != null)
                 {
@@ -122,19 +131,34 @@ public class BlenderDragHandler : MonoBehaviour
                     lumiAnimator.Play("LumiThinking");
                 }
 
-                // 🌟 NEW HOOK: Tell her personality script to analyze the food and award the stars!
                 if (lumi.TryGetComponent<CharacterPersonality>(out var personality))
                 {
-                    // Passes the custom recipe name (e.g. "Strawberry Shake") to compute the score
-                    personality.ProcessFedFoodItem("Strawberry Shake");
+                    personality.ProcessFedFoodItem("Kiwi Shake");
                 }
 
-                Debug.Log("Lumi happily drank the completed milkshake blend!");
+                // 🌟 TODAY'S TASK: Spawn stars directly over Lumi's head
+                TriggerStarsOverHead(lumi.transform);
+
+                Debug.Log("🔥 [SUCCESS] Lumi successfully fed!");
                 return true;
             }
         }
+        else
+        {
+            Debug.LogError("⚠️ Could not locate LumiController in the scene!");
+        }
         return false;
-    }   
+    }
+
+    private void TriggerStarsOverHead(Transform targetCharacter)
+    {
+        if (starsParticleSystem != null && targetCharacter != null)
+        {
+            starsParticleSystem.transform.position = targetCharacter.position + starsOffset;
+            starsParticleSystem.Stop();
+            starsParticleSystem.Play();
+        }
+    }
 
     private void ApplyGravity()
     {
@@ -144,7 +168,6 @@ public class BlenderDragHandler : MonoBehaviour
         currentPos.y += verticalVelocity * Time.deltaTime;
         transform.position = currentPos;
 
-        // Floor boundary collision lock check
         if (transform.position.y <= counterFloorY)
         {
             transform.position = new Vector3(transform.position.x, counterFloorY, transform.position.z);
@@ -153,9 +176,6 @@ public class BlenderDragHandler : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 🚀 THE UNLOCK SWITCH: Called by BlenderController when the blend successfully completes!
-    /// </summary>
     public void EnableBlenderDraggability(bool status)
     {
         canBePickedUp = status;
@@ -175,11 +195,9 @@ public class BlenderDragHandler : MonoBehaviour
             blenderController.ClearBlender();
         }
 
-        // 🌟 SNAP BACK TO THE EXACT ORIGINAL RESTING SLOT INSTEAD OF JUST THE HEIGHT!
+        // Instantly snap back to the exact initial layout position
         transform.position = initialStartingPosition;
     }
-
-    #region ── INPUT VECTOR UTILITIES ──
 
     private Vector3 GetMouseWorldPosition()
     {
@@ -194,6 +212,4 @@ public class BlenderDragHandler : MonoBehaviour
 
     private bool InputPressed() => Pointer.current != null && Pointer.current.press.wasPressedThisFrame;
     private bool InputReleased() => Pointer.current != null && Pointer.current.press.wasReleasedThisFrame;
-
-    #endregion
 }

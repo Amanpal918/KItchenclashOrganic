@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2547773133053301088}
   - component: {fileID: -180687825412493270}
   - component: {fileID: 7002330434331930921}
-  - component: {fileID: 1909335331204077333}
+  - component: {fileID: -6242165544947373481}
   m_Layer: 6
   m_Name: Slice_Cokked_bread 1
   m_TagString: Untagged
@@ -185,7 +185,7 @@ MonoBehaviour:
   floorBottomY: -8.69
   minScaleMultiplier: 0.5
   maxScaleMultiplier: 1
---- !u!114 &1909335331204077333
+--- !u!114 &-6242165544947373481
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -194,8 +194,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 4293608353481517473}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4f8b7d9d3b462c4384d3bf1a016f773, type: 3}
+  m_Script: {fileID: 11500000, guid: d4c1c8ad4b716994cbb692cd0433c3d2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BreadDragHandler
-  isRawBread: 0
-  activationDistance: 1.5
+  m_EditorClassIdentifier: Assembly-CSharp::IngredientController
+  ingredientData: {fileID: 11400000, guid: c7bd401529ad4bd4883be829348633c2, type: 2}
+  floorTopY: -1.64
+  floorBottomY: -8.69
+  gravity: 25
+  baseBounceForce: 5
+  bounciness: 0.5
+  counterLandingOffset: 0
+  isSourceDispenser: 0

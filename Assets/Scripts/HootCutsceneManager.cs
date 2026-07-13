@@ -25,6 +25,14 @@ public class HootCutsceneManager : MonoBehaviour
     [SerializeField] private float destinationYPosition = -4.2f;
     [SerializeField] private float travelDuration = 10f;
 
+    [Header("🗂️ Fridge Hierarchy Settings")]
+    [SerializeField] private Transform fridgeShelfTargetParent; // ⚠️ Drag "Shelf_top" here in the Inspector!
+
+    // 📍 PRECISE DEFINITIVE WORKSTATION COORDINATES FROM YOUR INSPECTOR IMAGES
+    private Vector3 toasterPermanentWorldPos = new Vector3(22.73f, 1.3f, 0f);
+    private Vector3 breadPermanentWorldPos = new Vector3(10.12f, 1.06f, 0f);
+    private Vector3 butterPermanentLocalPos = new Vector3(-0.664f, 0.02850008f, 0f);
+
     private Animator hootAnimator;
     private bool cutsceneTriggered = false;
     private int popOutSequenceStage = 0;
@@ -64,18 +72,60 @@ public class HootCutsceneManager : MonoBehaviour
 
         if (toasterObject != null) toasterObject.SetActive(false);
         if (breadObject != null) breadObject.SetActive(false);
-        if (butterObject != null) butterObject.SetActive(false);
+
+        if (butterObject != null)
+        {
+            butterObject.transform.SetParent(null); // 🌟 Ensure it starts outside fridge hierarchy on fresh run!
+            butterObject.SetActive(false);
+        }
     }
 
     private void SetAllObjectsToFinalGameplayState()
     {
         if (mainOpenDoorObject != null) mainOpenDoorObject.SetActive(true);
-        if (hootCharacterObject != null) hootCharacterObject.SetActive(true);
+
+        if (hootCharacterObject != null)
+        {
+            hootCharacterObject.SetActive(true);
+            hootCharacterObject.transform.position = new Vector3(destinationXPosition, destinationYPosition, 0f);
+
+            SpriteRenderer hootRenderer = hootCharacterObject.GetComponent<SpriteRenderer>();
+            if (hootRenderer != null)
+            {
+                hootRenderer.sortingLayerName = "Characters";
+                hootRenderer.sortingOrder = 2;
+            }
+
+            Animator hootAnim = hootCharacterObject.GetComponent<Animator>();
+            if (hootAnim != null) hootAnim.SetTrigger("StopWalking");
+        }
+
         if (standaloneGroceryBagObject != null) standaloneGroceryBagObject.SetActive(false);
 
-        if (toasterObject != null) toasterObject.SetActive(true);
-        if (breadObject != null) breadObject.SetActive(true);
-        if (butterObject != null) butterObject.SetActive(true);
+        if (toasterObject != null)
+        {
+            toasterObject.transform.position = toasterPermanentWorldPos;
+            toasterObject.SetActive(true);
+            ConfigurePermanentWorkstate(toasterObject, false);
+        }
+
+        if (breadObject != null)
+        {
+            breadObject.transform.position = breadPermanentWorldPos;
+            breadObject.SetActive(true);
+            ConfigurePermanentWorkstate(breadObject, true);
+        }
+
+        if (butterObject != null)
+        {
+            if (fridgeShelfTargetParent != null)
+            {
+                butterObject.transform.SetParent(fridgeShelfTargetParent);
+            }
+            butterObject.transform.localPosition = butterPermanentLocalPos;
+            butterObject.SetActive(true);
+            ConfigurePermanentWorkstate(butterObject, true);
+        }
     }
 
     private void TriggerArrivalCutscene()
@@ -91,7 +141,6 @@ public class HootCutsceneManager : MonoBehaviour
             hootCharacterObject.SetActive(true);
             hootAnimator = hootCharacterObject.GetComponent<Animator>();
 
-            // 🌟 OLD LAYER SETUP RESTORED: Hardcoding Hoot back to Default layer
             SpriteRenderer hootRenderer = hootCharacterObject.GetComponent<SpriteRenderer>();
             if (hootRenderer != null)
             {
@@ -100,7 +149,6 @@ public class HootCutsceneManager : MonoBehaviour
             }
 
             Vector3 targetWalkingDestination = new Vector3(destinationXPosition, destinationYPosition, 0f);
-
             hootCharacterObject.transform.DOMove(targetWalkingDestination, travelDuration)
                  .SetEase(Ease.Linear)
                  .OnComplete(TransitionToRestingState);
@@ -115,7 +163,6 @@ public class HootCutsceneManager : MonoBehaviour
         {
             standaloneGroceryBagObject.SetActive(true);
             isBagClickable = true;
-            Debug.Log("🎯 Hoot reached the table! Standalone grocery bag is now CLICKABLE.");
         }
     }
 
@@ -128,39 +175,52 @@ public class HootCutsceneManager : MonoBehaviour
         switch (popOutSequenceStage)
         {
             case 0:
-                PopItemOntoTable(toasterObject, bagWorldPos, new Vector3(12.2f, -4.3f, 0f));
+                Vector3 toasterTarget = bagWorldPos + new Vector3(-1.3f, -1.0f, 0f);
+                PopItemOntoRoundTable(toasterObject, bagWorldPos, toasterTarget);
                 popOutSequenceStage++;
                 break;
 
             case 1:
-                PopItemOntoTable(breadObject, bagWorldPos, new Vector3(13.6f, -4.3f, 0f));
+                Vector3 breadTarget = bagWorldPos + new Vector3(0f, -1.0f, 0f);
+                PopItemOntoRoundTable(breadObject, bagWorldPos, breadTarget);
                 popOutSequenceStage++;
                 break;
 
             case 2:
-                PopItemOntoTable(butterObject, bagWorldPos, new Vector3(15.0f, -4.3f, 0f));
-
+                Vector3 butterTarget = bagWorldPos + new Vector3(1.3f, -1.0f, 0f);
+                PopItemOntoRoundTable(butterObject, bagWorldPos, butterTarget);
                 isBagClickable = false;
                 standaloneGroceryBagObject.SetActive(false);
-                Debug.Log("🏁 All items delivered onto the table surface layout.");
                 break;
         }
     }
 
-    private void PopItemOntoTable(GameObject targetObj, Vector3 spawnOrigin, Vector3 tableLandingSpot)
+    private void PopItemOntoRoundTable(GameObject targetObj, Vector3 spawnOrigin, Vector3 tableLandingSpot)
     {
         if (targetObj == null) return;
-
-        FlyToHomeItem flyScript = targetObj.GetComponent<FlyToHomeItem>();
-        if (flyScript != null)
-        {
-            flyScript.PrepareForTableDisplay();
-        }
-
         targetObj.transform.position = spawnOrigin;
         targetObj.SetActive(true);
+        targetObj.transform.DOJump(tableLandingSpot, 1.5f, 1, 0.5f).SetEase(Ease.OutQuad);
+    }
 
-        targetObj.transform.DOJump(tableLandingSpot, 1.8f, 1, 0.6f)
-            .SetEase(Ease.OutQuad);
+    public void OnItemArrivedAtPermanentHome(GameObject targetObj)
+    {
+        if (targetObj == toasterObject) ConfigurePermanentWorkstate(toasterObject, false);
+        if (targetObj == breadObject) ConfigurePermanentWorkstate(breadObject, true);
+        if (targetObj == butterObject) ConfigurePermanentWorkstate(butterObject, true);
+    }
+
+    private void ConfigurePermanentWorkstate(GameObject targetObj, bool isDispenser)
+    {
+        MonoBehaviour flyScript = targetObj.GetComponent("FlyToHomeItem") as MonoBehaviour;
+        if (flyScript != null) flyScript.enabled = false;
+
+        IngredientController component = targetObj.GetComponent<IngredientController>();
+        if (component != null)
+        {
+            component.isSourceDispenser = isDispenser;
+            component.enabled = true;
+            component.ClearFridgeShelfStatus();
+        }
     }
 }

@@ -573,17 +573,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.05294037, y: 0.83535814}
+  m_Offset: {x: -0.033786297, y: 0.44690827}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 18.87, y: 3.66}
+    oldSize: {x: 11.23, y: 2.23}
     newSize: {x: 20.550001, y: 3.170801}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 18.367542, y: 0.31721562}
+  m_Size: {x: 10.876843, y: 0.3382129}
   m_EdgeRadius: 0
 --- !u!212 &74532383
 SpriteRenderer:
@@ -634,7 +634,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 1944054995938551939, guid: c6f54561df19ff1418d304b48f5c9b84, type: 3}
+  m_Sprite: {fileID: 6236746720318227354, guid: f1463d1550e8be0468325db5bf9ac9fc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -654,8 +654,8 @@ Transform:
   m_GameObject: {fileID: 74532381}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 14.49, y: -0.43, z: 0}
-  m_LocalScale: {x: 1.2073239, y: 1.2498729, z: 1}
+  m_LocalPosition: {x: 14.2506, y: -0.3922, z: 0}
+  m_LocalScale: {x: 2.0436356, y: 2.0555801, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -673,13 +673,13 @@ GameObject:
   - component: {fileID: 92754887}
   - component: {fileID: 92754890}
   - component: {fileID: 92754891}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Toaster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &92754887
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -808,16 +808,16 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 92754886}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7f0cd3b0a3fc4664c877d4feb06f3a2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ToasterController
   currentState: 0
   toasterSpriteRenderer: {fileID: 92754888}
-  emptyToasterSprite: {fileID: -7688980531593472791, guid: d8abb9f662d014b49aefda5fda01de46, type: 3}
-  rawBreadToasterSprite: {fileID: 8404945129484420327, guid: c09241bca95e8ed4682f44bfc5fae22c, type: 3}
-  cookedToastToasterSprite: {fileID: 6756934072316370144, guid: 69515bc0d485c874a986f4bce47594f1, type: 3}
+  emptyToasterSprite: {fileID: -7688980531593472791, guid: 974de2ff747cefd4b865c1c52aadf020, type: 3}
+  rawBreadToasterSprite: {fileID: 8404945129484420327, guid: 1bde9693e421c5e4fa5804f81342a03d, type: 3}
+  cookedToastToasterSprite: {fileID: 6756934072316370144, guid: 9d480571c928c2c4f847b7200b689867, type: 3}
   cookingDuration: 3
   cookedToastPrefab: {fileID: 4293608353481517473, guid: a3eb8d4d61a774544b0975a8466f8565, type: 3}
 --- !u!114 &92754891
@@ -834,7 +834,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FlyToHomeItem
   permanentHomePosition: {x: 22.73, y: 1.3, z: 0}
   fridgeShelfTargetParent: {fileID: 0}
-  localOffsetNextToCheese: {x: 0.5, y: 0, z: 0}
+  targetLocalPosition: {x: -0.2, y: 0, z: 0}
 --- !u!1 &147059909
 GameObject:
   m_ObjectHideFlags: 0
@@ -875,6 +875,7 @@ MonoBehaviour:
   destinationXPosition: 9.3
   destinationYPosition: -4.2
   travelDuration: 10
+  fridgeShelfTargetParent: {fileID: 0}
 --- !u!4 &147059911
 Transform:
   m_ObjectHideFlags: 0
@@ -1164,7 +1165,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FlyToHomeItem
   permanentHomePosition: {x: 10.12, y: 1.06, z: 0}
   fridgeShelfTargetParent: {fileID: 0}
-  localOffsetNextToCheese: {x: 0.5, y: 0, z: 0}
+  targetLocalPosition: {x: -0.2, y: 0, z: 0}
 --- !u!1 &293858789
 GameObject:
   m_ObjectHideFlags: 0
@@ -1569,17 +1570,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.049760878, y: -0.014142662}
+  m_Offset: {x: -0.09632683, y: -0.2336061}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.95, y: 1.64}
+    oldSize: {x: 6.48, y: 11.5}
     newSize: {x: 0.95, y: 1.64}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.834746, y: 1.6089027}
+  m_Size: {x: 5.7926855, y: 10.420673}
   m_EdgeRadius: 0
 --- !u!212 &362588801
 SpriteRenderer:
@@ -1630,7 +1631,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -8414445453311855943, guid: 3da91a20c8e52c8428f992dcee97af58, type: 3}
+  m_Sprite: {fileID: -258828060253417934, guid: 6bf132ac991a487499411a271c300c37, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1650,8 +1651,8 @@ Transform:
   m_GameObject: {fileID: 362588799}
   serializedVersion: 2
   m_LocalRotation: {x: -0.00000018724815, y: -0.000000001415394, z: 0.007578264, w: 0.9999713}
-  m_LocalPosition: {x: 20.829, y: 1.76, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
+  m_LocalPosition: {x: 20.24, y: 2.2, z: 0}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 1.2759}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 478480448}
@@ -1704,6 +1705,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BlenderDragHandler
   followSmoothing: 25
   gravity: 25
+  starsParticleSystem: {fileID: 0}
+  starsOffset: {x: 0, y: 2, z: 0}
 --- !u!1 &384445980
 GameObject:
   m_ObjectHideFlags: 0
@@ -1907,8 +1910,8 @@ GameObject:
   - component: {fileID: 426995396}
   - component: {fileID: 426995395}
   - component: {fileID: 426995394}
-  - component: {fileID: 426995393}
   - component: {fileID: 426995392}
+  - component: {fileID: 426995398}
   m_Layer: 0
   m_Name: Hoot
   m_TagString: Untagged
@@ -1938,52 +1941,6 @@ MonoBehaviour:
   starUiPrefab: {fileID: 7069269247358579585, guid: d3337f7cdbb9ad74aa9580b3fede1259, type: 3}
   starPopupContainer: {fileID: 942755336}
   popupDisplayDuration: 2
---- !u!61 &426995393
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 426995391}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.022021174}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 4.54, y: 5.6}
-    newSize: {x: 4.54, y: 5.6}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 4.54, y: 5.644043}
-  m_EdgeRadius: 0
 --- !u!114 &426995394
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2097,11 +2054,48 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -1, z: 0, w: 0}
   m_LocalPosition: {x: -4.22, y: 0.13, z: -0.00000025154034}
-  m_LocalScale: {x: 1.1652, y: 1.1339, z: 1}
+  m_LocalScale: {x: 0.9, y: 0.9, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
+--- !u!70 &426995398
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 426995391}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0.079507835, y: -0.48542342}
+  m_Size: {x: 2.3137856, y: 4.629179}
+  m_Direction: 0
 --- !u!1 &443437970
 GameObject:
   m_ObjectHideFlags: 0
@@ -11352,7 +11346,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 3692373591177285780, guid: ff9aef510bb48fa4b85a1a38400f591d, type: 3}
+  m_Sprite: {fileID: 7200886521380476991, guid: 6d11c3a1d9a5e1043b48f64ede1cb083, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -13680,8 +13674,8 @@ GameObject:
   - component: {fileID: 1951826667}
   - component: {fileID: 1951826666}
   - component: {fileID: 1951826670}
-  - component: {fileID: 1951826669}
   - component: {fileID: 1951826671}
+  - component: {fileID: 1951826672}
   m_Layer: 0
   m_Name: 'Lumi '
   m_TagString: Untagged
@@ -13786,52 +13780,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &1951826669
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1951826665}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.022021174}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 4.54, y: 5.6}
-    newSize: {x: 4.54, y: 5.6}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 4.54, y: 5.644043}
-  m_EdgeRadius: 0
 --- !u!114 &1951826670
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13875,6 +13823,43 @@ MonoBehaviour:
   starUiPrefab: {fileID: 7069269247358579585, guid: d3337f7cdbb9ad74aa9580b3fede1259, type: 3}
   starPopupContainer: {fileID: 942755336}
   popupDisplayDuration: 2
+--- !u!70 &1951826672
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1951826665}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0.023744583, y: -0.45711416}
+  m_Size: {x: 2.616558, y: 4.685771}
+  m_Direction: 0
 --- !u!1 &1978029638
 GameObject:
   m_ObjectHideFlags: 0
@@ -20097,7 +20082,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FlyToHomeItem
   permanentHomePosition: {x: -0.664, y: 0.02850008, z: 0}
   fridgeShelfTargetParent: {fileID: 1430003576}
-  localOffsetNextToCheese: {x: 0.5, y: 0, z: 0}
+  targetLocalPosition: {x: -0.5, y: 0, z: 0}
 --- !u!4 &8053709841666498056
 Transform:
   m_ObjectHideFlags: 0
